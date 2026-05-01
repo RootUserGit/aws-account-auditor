@@ -1,0 +1,6 @@
+id: SEC010_S3_BUCKETS_PUBLIC_ACCESS_BLOCK
+pillar: security
+severity: high
+war_theme: SEC08
+description: Each S3 bucket should have Public Access Block configured where applicable.
+evaluator: s3_buckets_have_public_access_block

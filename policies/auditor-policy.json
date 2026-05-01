@@ -1,0 +1,38 @@
+{
+	"Version": "2012-10-17",
+	"Statement": [
+		{
+			"Sid": "AuditReadOnlyDiscovery",
+			"Effect": "Allow",
+			"Action": [
+				"sts:GetCallerIdentity",
+				"iam:GetAccountSummary",
+				"iam:ListUsers",
+				"iam:ListMFADevices",
+				"iam:GetCredentialReport",
+				"iam:GenerateCredentialReport",
+				"iam:GetAccountPasswordPolicy",
+				"s3:ListAllMyBuckets",
+				"s3:GetBucketPublicAccessBlock",
+				"s3:GetBucketLocation",
+				"s3:GetAccountPublicAccessBlock",
+				"s3:GetBucketPolicyStatus",
+				"ec2:DescribeRegions",
+				"ec2:DescribeSecurityGroups",
+				"config:DescribeConfigurationRecorders",
+				"config:DescribeConfigurationRecorderStatus",
+				"securityhub:GetFindings",
+				"securityhub:DescribeHub",
+				"cloudtrail:DescribeTrails",
+				"cloudtrail:GetTrailStatus",
+				"ce:GetCostAndUsage",
+				"ce:GetDimensionValues",
+				"budgets:ViewBudget",
+				"budgets:DescribeBudgetAction",
+				"support:DescribeTrustedAdvisorChecks",
+				"support:DescribeTrustedAdvisorCheckRefreshStatuses"
+			],
+			"Resource": "*"
+		}
+	]
+}

@@ -1,0 +1,6 @@
+id: SEC004_S3_ACCOUNT_PUBLIC_ACCESS_BLOCK
+pillar: security
+severity: high
+war_theme: SEC08
+description: S3 account-level Block Public Access should be fully enabled.
+evaluator: s3_account_public_access_block_enabled

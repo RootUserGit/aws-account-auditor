@@ -1,0 +1,6 @@
+id: COST002_COST_EXPLORER_DATA
+pillar: cost_optimization
+severity: low
+war_theme: COST02
+description: Cost Explorer should return cost breakdown for the period.
+evaluator: cost_explorer_has_data

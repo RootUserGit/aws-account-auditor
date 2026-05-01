@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "audit-core"
+version = "0.1.0"
+requires-python = ">=3.9"
+dependencies = [
+  "sqlalchemy>=2.0,<3",
+  "psycopg[binary]>=3.1,<4",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8"]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["audit_core*"]

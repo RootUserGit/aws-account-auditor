@@ -1,0 +1,6 @@
+id: SEC009_ACCESS_KEYS_ROTATION
+pillar: security
+severity: medium
+war_theme: SEC03
+description: IAM users should not have stale access keys (credential report heuristic).
+evaluator: iam_access_keys_rotation_heuristic

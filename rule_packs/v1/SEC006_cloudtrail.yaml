@@ -1,0 +1,6 @@
+id: SEC006_CLOUDTRAIL_LOGGING
+pillar: security
+severity: high
+war_theme: SEC04
+description: At least one CloudTrail trail should be logging.
+evaluator: cloudtrail_logging_enabled

@@ -1,0 +1,55 @@
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.env*
+.env.example
+node_modules/
+.next/
+out/
+dist/
+*.egg-info/
+/tmp/
+coverage/
+
+
+
+#frontend
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+audit-frontend/node_modules
+audit-frontend/.pnp
+audit-frontend/.pnp.js
+audit-frontend/.yarn/install-state.gz
+
+# testing
+audit-frontend/coverage
+
+# next.js
+audit-frontend/.next/
+audit-frontend/out/
+
+# production
+audit-frontend/build
+
+# misc
+audit-frontend/.DS_Store
+*.pem
+
+# debug
+audit-frontend/npm-debug.log*
+audit-frontend/yarn-debug.log*
+yarn-error.log*
+
+# local env files
+audit-frontend/.env*.local
+
+# vercel
+audit-frontend/.vercel
+
+# typescript
+audit-frontend/*.tsbuildinfo
+audit-frontend/test-results/
+audit-frontend/playwright-report/

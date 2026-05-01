@@ -1,0 +1,6 @@
+id: SEC005_DEFAULT_SG_RESTRICTIVE
+pillar: security
+severity: medium
+war_theme: SEC05
+description: Default security groups should not allow unexpected ingress.
+evaluator: ec2_default_sg_no_open_ingress

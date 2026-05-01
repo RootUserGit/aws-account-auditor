@@ -1,0 +1,6 @@
+id: SEC008_SECURITY_HUB
+pillar: security
+severity: medium
+war_theme: SEC04
+description: Security Hub should be enabled for centralized findings.
+evaluator: security_hub_enabled_check

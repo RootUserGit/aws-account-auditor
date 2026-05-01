@@ -1,0 +1,6 @@
+id: COST004_ZERO_OR_LOW_SPEND_SIGNAL
+pillar: cost_optimization
+severity: info
+war_theme: COST02
+description: Detect zero spend as potential idle workload signal (informational).
+evaluator: cost_zero_spend_signal

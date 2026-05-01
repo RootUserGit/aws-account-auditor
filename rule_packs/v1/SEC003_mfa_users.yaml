@@ -1,0 +1,6 @@
+id: SEC003_CONSOLE_USERS_MFA
+pillar: security
+severity: high
+war_theme: SEC03
+description: IAM users with console access should enable MFA.
+evaluator: iam_console_users_have_mfa

@@ -1,0 +1,6 @@
+id: COST001_AWS_BUDGETS
+pillar: cost_optimization
+severity: medium
+war_theme: COST06
+description: Cost or usage budgets help detect anomalies.
+evaluator: budgets_present

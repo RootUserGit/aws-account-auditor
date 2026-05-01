@@ -1,0 +1,6 @@
+id: SEC001_ROOT_ACCESS_KEYS
+pillar: security
+severity: critical
+war_theme: SEC02
+description: Root user access keys should not exist.
+evaluator: iam_root_no_access_keys

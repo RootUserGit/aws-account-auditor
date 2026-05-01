@@ -1,0 +1,6 @@
+id: SEC007_CONFIG_RECORDER
+pillar: security
+severity: medium
+war_theme: SEC04
+description: AWS Config recorder should be recording when Config is used.
+evaluator: config_recorder_on
