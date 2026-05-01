@@ -145,6 +145,7 @@ curl -sS -o report.html "http://localhost:8000/runs/<RUN_UUID>/report.html" \
 
 ---
 
+
 ## Same calls via Next.js proxy (optional)
 
 If the UI is running on port 3000, equivalent URLs are under **`http://localhost:3000/api/backend/...`** (path after `/api/backend/` matches the API path above). The proxy injects `X-API-Key` from server env — useful for browsers, not required for direct `curl` to port 8000.
