@@ -134,17 +134,23 @@ function DashboardContent() {
       .then((r) => r.json())
       .then(setAccounts)
       .catch(() => setErr("Failed to load accounts"));
-  }, []);
-
-  useEffect(() => {
-    void loadScanHistory();
+    Promise.resolve().then(() => {
+      void loadScanHistory();
+    });
   }, [loadScanHistory]);
 
   useEffect(() => {
     if (!runId) {
-      setRun(null);
-      setFindings([]);
-      return;
+      let live = true;
+      queueMicrotask(() => {
+        if (live) {
+          setRun(null);
+          setFindings([]);
+        }
+      });
+      return () => {
+        live = false;
+      };
     }
 
     let cancelled = false;
