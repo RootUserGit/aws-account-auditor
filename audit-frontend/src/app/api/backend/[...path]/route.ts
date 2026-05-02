@@ -42,21 +42,24 @@ async function forward(
 
 export async function GET(
   request: NextRequest,
-  ctx: { params: { path: string[] } }
+  ctx: { params: Promise<{ path: string[] }> }
 ) {
-  return forward(request, ctx.params.path, "GET");
+  const { path } = await ctx.params;
+  return forward(request, path, "GET");
 }
 
 export async function POST(
   request: NextRequest,
-  ctx: { params: { path: string[] } }
+  ctx: { params: Promise<{ path: string[] }> }
 ) {
-  return forward(request, ctx.params.path, "POST");
+  const { path } = await ctx.params;
+  return forward(request, path, "POST");
 }
 
 export async function DELETE(
   request: NextRequest,
-  ctx: { params: { path: string[] } }
+  ctx: { params: Promise<{ path: string[] }> }
 ) {
-  return forward(request, ctx.params.path, "DELETE");
+  const { path } = await ctx.params;
+  return forward(request, path, "DELETE");
 }

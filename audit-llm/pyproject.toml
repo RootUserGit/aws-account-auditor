@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "audit-llm"
 version = "0.1.0"
-requires-python = ">=3.9"
+requires-python = ">=3.14"
 dependencies = [
   "fastapi>=0.115,<1",
   "uvicorn[standard]>=0.30,<1",

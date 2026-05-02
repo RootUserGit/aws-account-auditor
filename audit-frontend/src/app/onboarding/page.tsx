@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import Link from "next/link";
 
 function parseDetail(raw: unknown): string {
@@ -171,6 +171,7 @@ export default function OnboardingPage() {
             Register
           </button>
           <QuickVerify
+            key={linkedRowId ?? "no-row"}
             initialId={linkedRowId ?? ""}
             onVerify={verify}
             onDelete={removeAccount}
@@ -199,9 +200,6 @@ function QuickVerify({
   disabled: boolean;
 }) {
   const [id, setId] = useState(initialId);
-  useEffect(() => {
-    if (initialId) setId(initialId);
-  }, [initialId]);
 
   return (
     <div className="space-y-2">
