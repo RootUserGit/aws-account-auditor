@@ -1,0 +1,6 @@
+id: SEC053_EC2_INSTANCE_PROFILE_ATTACHED
+pillar: security
+severity: high
+war_theme: SEC02
+description: EC2 instances should use IAM instance profiles instead of relying solely on static keys.
+evaluator: ec2_instance_profile_attached

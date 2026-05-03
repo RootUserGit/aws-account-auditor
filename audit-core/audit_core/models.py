@@ -22,6 +22,7 @@ class AuditRunStatus(str, enum.Enum):
     running = "running"
     succeeded = "succeeded"
     failed = "failed"
+    cancelled = "cancelled"
 
 
 class FindingStatus(str, enum.Enum):
@@ -67,12 +68,19 @@ class AuditRun(Base):
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     account_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("aws_accounts.id"), nullable=False)
+    #: Set when the API enqueues the run (UI / POST). Used for history ordering; worker sets ``started_at``.
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        default=lambda: datetime.now(timezone.utc),
+    )
     status: Mapped[str] = mapped_column(String(32), default=AuditRunStatus.queued.value)
     rule_pack_version: Mapped[str] = mapped_column(String(64), default="v1")
     error_code: Mapped[str | None] = mapped_column(String(128), nullable=True)
     summary_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     started_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     finished_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    #: RQ job id for cancel while queued; cooperative cancel while running via cancel gates.
+    rq_job_id: Mapped[str | None] = mapped_column(String(128), nullable=True)
 
     account: Mapped["AwsAccount"] = relationship(back_populates="runs")
     findings: Mapped[list["Finding"]] = relationship(back_populates="run")

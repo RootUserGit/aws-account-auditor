@@ -1,0 +1,6 @@
+id: SEC049_EC2_SG_WIDE_PORT_RANGE_WORLD
+pillar: security
+severity: high
+war_theme: SEC05
+description: Avoid very wide TCP port ranges opened to 0.0.0.0/0 in EC2 security groups.
+evaluator: ec2_sg_wide_port_ranges_world_open

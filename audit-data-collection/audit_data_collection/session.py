@@ -1,8 +1,27 @@
 from __future__ import annotations
 
+import os
 from typing import Any
 
 import boto3
+from botocore.config import Config
+
+
+def default_boto_config() -> Config:
+    """Bounded socket timeouts so collectors fail fast instead of hanging until RQ kills the job."""
+    connect = int(os.environ.get("AWS_CONNECT_TIMEOUT", "10"))
+    read = int(os.environ.get("AWS_READ_TIMEOUT", "120"))
+    return Config(
+        connect_timeout=connect,
+        read_timeout=read,
+        retries={"max_attempts": 4, "mode": "standard"},
+    )
+
+
+def aws_session_client(session: boto3.Session, service_name: str, **kwargs: Any) -> Any:
+    if "config" not in kwargs:
+        kwargs["config"] = default_boto_config()
+    return session.client(service_name, **kwargs)
 
 
 def build_session(

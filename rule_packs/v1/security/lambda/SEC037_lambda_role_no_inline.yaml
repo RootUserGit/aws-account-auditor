@@ -1,0 +1,6 @@
+id: SEC037_LAMBDA_ROLE_NO_INLINE
+pillar: security
+severity: medium
+war_theme: SEC02
+description: Lambda execution roles should avoid inline IAM policies (prefer managed policies).
+evaluator: lambda_execution_role_no_inline_policies

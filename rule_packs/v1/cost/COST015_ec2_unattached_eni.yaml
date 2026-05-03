@@ -1,0 +1,6 @@
+id: COST015_EC2_UNATTACHED_ENI
+pillar: cost
+severity: low
+war_theme: COST09
+description: Delete unattached Elastic Network Interfaces that linger after workload teardown (Trend unused ENIs).
+evaluator: ec2_unattached_enis_cleanup

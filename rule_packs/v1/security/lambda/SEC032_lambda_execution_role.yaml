@@ -1,0 +1,6 @@
+id: SEC032_LAMBDA_EXECUTION_ROLE
+pillar: security
+severity: high
+war_theme: SEC02
+description: Each Lambda function must reference an IAM execution role.
+evaluator: lambda_execution_role_present

@@ -1,0 +1,6 @@
+id: SEC023_ROOT_ACCOUNT_MFA_ENABLED
+pillar: security
+severity: critical
+war_theme: SEC02
+description: Multi-factor authentication must be enabled for the AWS account root user.
+evaluator: iam_root_mfa_enabled

@@ -1,0 +1,6 @@
+id: SEC024_IAM_ACCESS_KEYS_MAX_AGE
+pillar: security
+severity: medium
+war_theme: SEC03
+description: Rotate IAM access keys on a schedule (default threshold 90 days; aligns with Trend rotation guidance).
+evaluator: iam_access_keys_under_max_age

@@ -1,0 +1,6 @@
+id: SEC029_IAM_SERVER_CERTIFICATE_EXPIRY
+pillar: security
+severity: medium
+war_theme: SEC08
+description: IAM server certificates should not be expired or expiring within 30 days.
+evaluator: iam_server_certificates_not_expiring_soon

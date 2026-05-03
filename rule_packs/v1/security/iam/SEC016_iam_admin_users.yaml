@@ -1,0 +1,6 @@
+id: SEC016_IAM_ADMINISTRATOR_ACCESS_USERS
+pillar: security
+severity: high
+war_theme: SEC02
+description: IAM users should not retain AWS managed AdministratorAccess.
+evaluator: iam_no_administrator_access_users

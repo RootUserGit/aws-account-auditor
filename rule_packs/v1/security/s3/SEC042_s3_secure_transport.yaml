@@ -1,0 +1,6 @@
+id: SEC042_S3_SECURE_TRANSPORT_POLICY
+pillar: security
+severity: high
+war_theme: SEC08
+description: Buckets with a bucket policy should deny insecure (HTTP) access via aws:SecureTransport.
+evaluator: s3_bucket_policy_denies_insecure_transport

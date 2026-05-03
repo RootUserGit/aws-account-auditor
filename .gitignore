@@ -13,6 +13,10 @@ dist/
 /tmp/
 coverage/
 
+# Local working notes (not for version control)
+STACK-WORKING.md
+aws_audit_agentic_platform_77fee530.plan.md
+
 
 
 #frontend
@@ -53,3 +57,6 @@ audit-frontend/.vercel
 audit-frontend/*.tsbuildinfo
 audit-frontend/test-results/
 audit-frontend/playwright-report/
+
+audit-frontend/AGENTS.md
+audit-frontend/CLAUDE.md

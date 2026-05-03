@@ -1,0 +1,6 @@
+id: COST009_LAMBDA_PROVISIONED_CONCURRENCY
+pillar: cost
+severity: medium
+war_theme: COST07
+description: Review Lambda provisioned concurrency allocations — they incur fixed cost (Trend Lambda cost posture).
+evaluator: lambda_provisioned_concurrency_cost_review

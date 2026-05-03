@@ -1,0 +1,6 @@
+id: SEC044_ECS_CONTAINER_INSIGHTS
+pillar: security
+severity: medium
+war_theme: OPS08
+description: ECS clusters should enable CloudWatch Container Insights for monitoring (Trend ECS).
+evaluator: ecs_container_insights_enabled

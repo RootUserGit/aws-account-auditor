@@ -1,0 +1,6 @@
+id: SEC019_IAM_ACCESS_ANALYZER_ENABLED
+pillar: security
+severity: medium
+war_theme: SEC03
+description: IAM Access Analyzer should be enabled to detect unintended external access (Trend IAM KB).
+evaluator: access_analyzer_enabled_check

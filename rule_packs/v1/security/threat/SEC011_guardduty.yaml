@@ -1,0 +1,6 @@
+id: SEC011_GUARDDUTY_ENABLED
+pillar: security
+severity: high
+war_theme: SEC04
+description: Amazon GuardDuty should be enabled for continuous threat detection.
+evaluator: guardduty_enabled

@@ -1,0 +1,6 @@
+id: SEC034_LAMBDA_ENV_CMEK
+pillar: security
+severity: medium
+war_theme: SEC08
+description: Lambda environment variables should be encrypted at rest with a customer-managed KMS key when variables are set.
+evaluator: lambda_environment_encrypted_with_cmek

@@ -1,0 +1,6 @@
+id: SEC036_LAMBDA_SUPPORTED_RUNTIME
+pillar: security
+severity: high
+war_theme: SEC08
+description: Lambda functions should use a supported, non-deprecated runtime.
+evaluator: lambda_supported_runtime

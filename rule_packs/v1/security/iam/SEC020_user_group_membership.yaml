@@ -1,0 +1,6 @@
+id: SEC020_IAM_USERS_GROUP_MEMBERSHIP
+pillar: security
+severity: medium
+war_theme: SEC03
+description: IAM users should belong to at least one group for structured permissions.
+evaluator: iam_users_have_group_membership

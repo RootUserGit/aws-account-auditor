@@ -1,0 +1,6 @@
+id: SEC017_CLOUDTRAIL_MULTIREGION_LOGGING
+pillar: security
+severity: high
+war_theme: SEC06
+description: At least one multi-Region trail should record management events.
+evaluator: cloudtrail_multiregion_logging

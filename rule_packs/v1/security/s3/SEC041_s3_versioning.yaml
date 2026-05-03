@@ -1,0 +1,6 @@
+id: SEC041_S3_VERSIONING
+pillar: security
+severity: medium
+war_theme: SEC08
+description: Enable S3 versioning for buckets that need change protection and recovery (Trend S3 data protection).
+evaluator: s3_bucket_versioning_enabled

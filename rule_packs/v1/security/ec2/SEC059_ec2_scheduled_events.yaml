@@ -1,0 +1,6 @@
+id: SEC059_EC2_SCHEDULED_EVENTS
+pillar: security
+severity: medium
+war_theme: REL10
+description: Resolve EC2 scheduled events such as hardware retirement or maintenance.
+evaluator: ec2_no_scheduled_retirement_events

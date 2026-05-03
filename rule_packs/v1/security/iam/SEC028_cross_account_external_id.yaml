@@ -1,0 +1,6 @@
+id: SEC028_IAM_CROSS_ACCOUNT_TRUST_EXTERNAL_ID
+pillar: security
+severity: high
+war_theme: SEC03
+description: Cross-account IAM role trust policies should require sts ExternalId on sampled roles.
+evaluator: iam_cross_account_trust_external_id

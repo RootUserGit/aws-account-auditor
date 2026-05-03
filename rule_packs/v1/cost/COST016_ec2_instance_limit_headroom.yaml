@@ -1,0 +1,6 @@
+id: COST016_EC2_INSTANCE_LIMIT_HEADROOM
+pillar: cost
+severity: medium
+war_theme: COST07
+description: Ensure EC2 instance inventory stays below the account limit to allow scaling and failover (Trend instance limit).
+evaluator: ec2_account_instance_limit_headroom

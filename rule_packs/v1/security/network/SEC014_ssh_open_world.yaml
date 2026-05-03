@@ -1,0 +1,6 @@
+id: SEC014_SG_SSH_OPEN_INTERNET
+pillar: security
+severity: critical
+war_theme: SEC05
+description: Security groups must not expose SSH to the entire Internet.
+evaluator: ec2_ssh_open_to_world

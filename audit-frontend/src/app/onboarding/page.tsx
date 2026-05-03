@@ -3,6 +3,8 @@
 import { useState } from "react";
 import Link from "next/link";
 
+import { SiteHeader } from "@/components/SiteHeader";
+
 function parseDetail(raw: unknown): string {
   if (typeof raw === "string") return raw;
   if (raw && typeof raw === "object" && "message" in raw && typeof (raw as { message: unknown }).message === "string") {
@@ -123,23 +125,32 @@ export default function OnboardingPage() {
   }
 
   return (
-    <main className="min-h-screen bg-slate-950 text-slate-100 p-8">
-      <div className="max-w-xl mx-auto space-y-8">
-        <Link href="/" className="text-emerald-400 text-sm hover:underline">
-          ← Home
-        </Link>
-        <h1 className="text-2xl font-semibold">Onboard AWS account</h1>
+    <div className="min-h-screen flex flex-col">
+      <SiteHeader
+        nav={[
+          { href: "/", label: "Home" },
+          { href: "/dashboard", label: "Dashboard" },
+        ]}
+      />
+      <main className="flex-1 max-w-xl mx-auto w-full px-4 sm:px-6 py-10 space-y-8">
+        <div>
+          <Link href="/" className="text-aws-orange text-sm hover:underline">
+            ← Home
+          </Link>
+          <h1 className="text-2xl font-semibold text-white mt-3 tracking-tight">Onboard AWS account</h1>
+        </div>
         <p className="text-xs text-slate-500 leading-relaxed">
-          After <strong>Register</strong>, copy the <strong>row UUID</strong> (eight-dash format). Verify calls{" "}
-          <code className="text-emerald-300">POST /accounts/{"{uuid}"}/verify</code>. Random strings with{" "}
-          <code className="text-emerald-300">/</code> or <code className="text-emerald-300">+</code> are not valid
-          UUIDs and will 404.
+          After <strong className="text-slate-400">Register</strong>, copy the <strong className="text-slate-400">row UUID</strong>{" "}
+          (eight-dash format). Verify calls{" "}
+          <code className="text-aws-orange/90 font-mono text-[11px]">POST /accounts/{"{uuid}"}/verify</code>. Random strings with{" "}
+          <code className="font-mono text-slate-400">/</code> or <code className="font-mono text-slate-400">+</code> are not valid UUIDs
+          and will 404.
         </p>
-        <div className="space-y-4">
+        <div className="space-y-4 rounded-2xl border border-[var(--border)] bg-[var(--panel)]/50 p-6 shadow-xl shadow-black/20">
           <label className="block space-y-1">
             <span className="text-sm text-slate-400">Account ID (12 digits)</span>
             <input
-              className="w-full rounded-md bg-slate-900 border border-slate-700 px-3 py-2"
+              className="w-full rounded-lg bg-[#0c1117] border border-[var(--border)] px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-aws-orange/40"
               value={accountId}
               onChange={(e) => setAccountId(e.target.value)}
               placeholder="123456789012"
@@ -148,7 +159,7 @@ export default function OnboardingPage() {
           <label className="block space-y-1">
             <span className="text-sm text-slate-400">Auditor role ARN</span>
             <input
-              className="w-full rounded-md bg-slate-900 border border-slate-700 px-3 py-2"
+              className="w-full rounded-lg bg-[#0c1117] border border-[var(--border)] px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-aws-orange/40"
               value={roleArn}
               onChange={(e) => setRoleArn(e.target.value)}
               placeholder="arn:aws:iam::123456789012:role/YourAuditorRole"
@@ -157,7 +168,7 @@ export default function OnboardingPage() {
           <label className="block space-y-1">
             <span className="text-sm text-slate-400">External ID</span>
             <input
-              className="w-full rounded-md bg-slate-900 border border-slate-700 px-3 py-2"
+              className="w-full rounded-lg bg-[#0c1117] border border-[var(--border)] px-3 py-2 text-slate-100 focus:outline-none focus:ring-2 focus:ring-aws-orange/40"
               value={externalId}
               onChange={(e) => setExternalId(e.target.value)}
             />
@@ -166,7 +177,7 @@ export default function OnboardingPage() {
             type="button"
             disabled={loading}
             onClick={register}
-            className="rounded-lg bg-emerald-500 disabled:opacity-50 text-slate-950 font-medium px-4 py-2"
+            className="rounded-xl bg-aws-orange hover:bg-[var(--accent-muted)] disabled:opacity-50 text-aws-ink font-semibold px-4 py-2.5 w-full sm:w-auto transition-colors"
           >
             Register
           </button>
@@ -179,12 +190,12 @@ export default function OnboardingPage() {
           />
         </div>
         {message && (
-          <p className="rounded-md border border-slate-700 bg-slate-900 px-3 py-2 text-sm whitespace-pre-wrap">
+          <p className="rounded-xl border border-[var(--border)] bg-[var(--panel)]/70 px-4 py-3 text-sm whitespace-pre-wrap text-slate-300">
             {message}
           </p>
         )}
-      </div>
-    </main>
+      </main>
+    </div>
   );
 }
 
@@ -203,9 +214,11 @@ function QuickVerify({
 
   return (
     <div className="space-y-2">
-      <p className="text-xs text-slate-500">Row UUID (from API response field <code className="text-emerald-300">id</code>):</p>
+      <p className="text-xs text-slate-500">
+        Row UUID (from API response field <code className="text-aws-orange font-mono text-[11px]">id</code>):
+      </p>
       <input
-        className="w-full rounded-md bg-slate-900 border border-slate-700 px-3 py-2 text-sm font-mono"
+        className="w-full rounded-lg bg-[#0c1117] border border-[var(--border)] px-3 py-2 text-sm font-mono text-slate-100"
         placeholder="xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
         value={id}
         onChange={(e) => setId(e.target.value)}
@@ -215,7 +228,7 @@ function QuickVerify({
           type="button"
           disabled={disabled || !id.trim()}
           onClick={() => onVerify(id)}
-          className="rounded-lg border border-slate-600 px-3 py-2 text-sm"
+          className="rounded-lg border border-[var(--border)] px-3 py-2 text-sm hover:bg-[var(--panel-hover)]"
         >
           Verify STS
         </button>
@@ -223,7 +236,7 @@ function QuickVerify({
           type="button"
           disabled={disabled || !id.trim()}
           onClick={() => onDelete(id)}
-          className="rounded-lg border border-red-900 text-red-300 px-3 py-2 text-sm hover:bg-red-950/40"
+          className="rounded-lg border border-red-900/60 text-red-300 px-3 py-2 text-sm hover:bg-red-950/30"
         >
           Delete this row
         </button>

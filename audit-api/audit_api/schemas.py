@@ -35,12 +35,15 @@ class AwsAccountOut(BaseModel):
 class AuditRunOut(BaseModel):
     id: UUID
     account_id: UUID
+    created_at: datetime
     status: str
     rule_pack_version: str
     error_code: str | None
     summary_json: dict | None
     started_at: datetime | None
     finished_at: datetime | None
+    #: Same human-readable context as list rows (failed/cancelled only)
+    error_summary: str | None = None
 
     model_config = {"from_attributes": True}
 
@@ -51,11 +54,14 @@ class AuditRunListItem(BaseModel):
     id: UUID
     platform_account_id: UUID
     aws_account_id: str
+    created_at: datetime
     status: str
     rule_pack_version: str
     error_code: str | None = None
     started_at: datetime | None
     finished_at: datetime | None
+    #: Short human-readable failure context for terminal failed/cancelled rows
+    error_summary: str | None = None
 
 
 class FindingOut(BaseModel):

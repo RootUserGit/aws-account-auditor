@@ -1,0 +1,6 @@
+id: SEC056_EC2_INSTANCES_DEFAULT_SECURITY_GROUP
+pillar: security
+severity: medium
+war_theme: SEC05
+description: EC2 instances should not use the VPC default security group (Trend least privilege).
+evaluator: ec2_instances_avoid_default_security_group
