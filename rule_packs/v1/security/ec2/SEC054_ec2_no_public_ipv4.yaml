@@ -1,0 +1,6 @@
+id: SEC054_EC2_MINIMIZE_PUBLIC_IPV4
+pillar: security
+severity: medium
+war_theme: SEC05
+description: Reduce EC2 instances with public IPv4 addresses unless required (Trend network exposure).
+evaluator: ec2_instances_no_public_ipv4

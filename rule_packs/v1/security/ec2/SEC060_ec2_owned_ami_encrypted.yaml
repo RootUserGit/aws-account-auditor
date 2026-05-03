@@ -1,0 +1,6 @@
+id: SEC060_EC2_OWNED_AMI_ENCRYPTED
+pillar: security
+severity: high
+war_theme: SEC08
+description: Customer-owned AMIs should encrypt the root volume / snapshot material (Trend AMI encryption).
+evaluator: ec2_owned_ami_root_volume_encrypted

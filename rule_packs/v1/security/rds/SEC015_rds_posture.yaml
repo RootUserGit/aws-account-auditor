@@ -1,0 +1,6 @@
+id: SEC015_RDS_PUBLIC_OR_UNENCRYPTED
+pillar: security
+severity: high
+war_theme: SEC08
+description: RDS instances should be private and storage-encrypted.
+evaluator: rds_no_public_unencrypted

@@ -1,0 +1,6 @@
+id: SEC021_IAM_GROUPS_NO_INLINE_POLICIES
+pillar: security
+severity: low
+war_theme: SEC03
+description: Avoid inline policies on IAM groups; prefer managed policies.
+evaluator: iam_groups_avoid_inline_policies

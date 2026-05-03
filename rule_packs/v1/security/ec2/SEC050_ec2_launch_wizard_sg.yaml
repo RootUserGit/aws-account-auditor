@@ -1,0 +1,6 @@
+id: SEC050_EC2_LAUNCH_WIZARD_SECURITY_GROUPS
+pillar: security
+severity: low
+war_theme: SEC05
+description: Replace EC2 security groups whose names start with launch-wizard with explicitly managed groups.
+evaluator: ec2_launch_wizard_security_groups_avoid

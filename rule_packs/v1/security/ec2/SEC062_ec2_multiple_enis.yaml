@@ -1,0 +1,6 @@
+id: SEC062_EC2_MULTIPLE_ENIS_REVIEW
+pillar: security
+severity: low
+war_theme: SEC05
+description: Instances with multiple ENIs should be reviewed for unintended exposure or complexity (Trend EC2 ENI rule).
+evaluator: ec2_instances_single_primary_eni_expected

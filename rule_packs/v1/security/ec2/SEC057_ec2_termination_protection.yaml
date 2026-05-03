@@ -1,0 +1,6 @@
+id: SEC057_EC2_TERMINATION_PROTECTION_RUNNING
+pillar: security
+severity: low
+war_theme: REL10
+description: Running EC2 instances outside Auto Scaling should enable API termination protection where appropriate.
+evaluator: ec2_running_instances_termination_protection

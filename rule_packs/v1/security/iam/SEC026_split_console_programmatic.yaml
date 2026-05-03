@@ -1,0 +1,6 @@
+id: SEC026_IAM_SPLIT_CONSOLE_AND_PROGRAMMATIC_ACCESS
+pillar: security
+severity: medium
+war_theme: SEC03
+description: Avoid IAM users that combine console passwords with long-lived access keys.
+evaluator: iam_avoid_password_and_long_term_keys

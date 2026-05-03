@@ -1,0 +1,6 @@
+id: SEC051_EC2_SECURITY_GROUP_RULE_BLOAT
+pillar: security
+severity: medium
+war_theme: SEC05
+description: EC2 security groups with extremely large rule counts are harder to audit and prone to overly permissive access.
+evaluator: ec2_security_group_high_rule_count

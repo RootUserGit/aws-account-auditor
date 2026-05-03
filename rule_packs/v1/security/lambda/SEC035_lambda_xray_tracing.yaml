@@ -1,0 +1,6 @@
+id: SEC035_LAMBDA_XRAY_TRACING
+pillar: security
+severity: low
+war_theme: OPS08
+description: Enable active X-Ray tracing on Lambda functions for observability and security investigations.
+evaluator: lambda_tracing_active

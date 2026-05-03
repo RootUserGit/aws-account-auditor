@@ -1,0 +1,6 @@
+id: SEC048_EC2_NON_SSH_SENSITIVE_PORTS_WORLD
+pillar: security
+severity: critical
+war_theme: SEC05
+description: Security groups must not expose non-SSH sensitive services (RDP, databases, Redis, etc.) to the entire Internet.
+evaluator: ec2_non_ssh_sensitive_ports_world_open

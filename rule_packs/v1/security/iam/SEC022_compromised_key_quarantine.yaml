@@ -1,0 +1,6 @@
+id: SEC022_IAM_COMPROMISED_KEY_QUARANTINE_ABSENT
+pillar: security
+severity: critical
+war_theme: SEC03
+description: No IAM user should retain AWSCompromisedKeyQuarantine managed policies after remediation.
+evaluator: iam_no_compromised_key_quarantine

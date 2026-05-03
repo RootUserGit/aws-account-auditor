@@ -31,6 +31,7 @@ services:
     environment:
       DATABASE_URL: postgresql+psycopg://audit:audit@postgres:5432/audit
       REDIS_URL: redis://redis:6379/0
+      AUDIT_JOB_TIMEOUT_SECONDS: "900"
       AUDIT_API_KEY: ${AUDIT_API_KEY:-dev-change-me}
       CORS_ORIGINS: http://localhost:3000
       # Same credential chain as audit-worker: required for POST /accounts/{id}/verify (STS AssumeRole)

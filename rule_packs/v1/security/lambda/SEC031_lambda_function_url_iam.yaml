@@ -1,0 +1,6 @@
+id: SEC031_LAMBDA_FUNCTION_URL_IAM
+pillar: security
+severity: high
+war_theme: SEC08
+description: Lambda function URLs should use IAM authentication (Trend/Lambda best practices).
+evaluator: lambda_function_url_requires_iam_auth

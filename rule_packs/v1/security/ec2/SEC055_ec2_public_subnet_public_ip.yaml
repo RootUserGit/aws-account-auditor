@@ -1,0 +1,6 @@
+id: SEC055_EC2_PUBLIC_SUBNET_AND_PUBLIC_IP
+pillar: security
+severity: high
+war_theme: SEC05
+description: Instances in subnets with default routes to an Internet Gateway should not also expose public IPs without architectural intent.
+evaluator: ec2_instances_public_subnet_public_ip

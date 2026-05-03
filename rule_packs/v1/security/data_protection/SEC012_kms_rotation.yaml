@@ -1,0 +1,6 @@
+id: SEC012_KMS_CMK_ROTATION
+pillar: security
+severity: medium
+war_theme: SEC08
+description: Customer-managed KMS keys should have rotation aligned to policy.
+evaluator: kms_customer_managed_rotation

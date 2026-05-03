@@ -1,0 +1,6 @@
+id: COST005_UNASSOCIATED_ELASTIC_IPS
+pillar: cost
+severity: medium
+war_theme: COST03
+description: Unassociated Elastic IPv4 addresses incur hourly charges.
+evaluator: cost_unassociated_elastic_ips

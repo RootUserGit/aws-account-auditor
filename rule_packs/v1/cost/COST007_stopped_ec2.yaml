@@ -1,0 +1,6 @@
+id: COST007_STOPPED_EC2_REVIEW
+pillar: cost
+severity: low
+war_theme: COST04
+description: Large numbers of stopped EC2 instances often correlate with wasted EBS spend.
+evaluator: cost_stopped_ec2_fleet_review

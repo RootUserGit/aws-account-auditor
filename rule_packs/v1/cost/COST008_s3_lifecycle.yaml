@@ -1,0 +1,6 @@
+id: COST008_S3_LIFECYCLE
+pillar: cost
+severity: low
+war_theme: COST09
+description: S3 buckets should define lifecycle rules to manage object transitions and expiration (Trend S3 cost hygiene).
+evaluator: s3_lifecycle_configuration_present

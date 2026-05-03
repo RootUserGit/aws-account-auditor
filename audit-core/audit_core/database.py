@@ -46,3 +46,31 @@ def init_db() -> None:
                     "last_verify_error_code VARCHAR(128)"
                 )
             )
+            conn.execute(
+                text(
+                    "ALTER TABLE audit_runs ADD COLUMN IF NOT EXISTS "
+                    "rq_job_id VARCHAR(128)"
+                )
+            )
+            conn.execute(
+                text(
+                    "ALTER TABLE audit_runs ADD COLUMN IF NOT EXISTS "
+                    "created_at TIMESTAMPTZ"
+                )
+            )
+            conn.execute(
+                text(
+                    "UPDATE audit_runs SET created_at = COALESCE(started_at, finished_at, CURRENT_TIMESTAMP) "
+                    "WHERE created_at IS NULL"
+                )
+            )
+            conn.execute(
+                text(
+                    "ALTER TABLE audit_runs ALTER COLUMN created_at SET DEFAULT CURRENT_TIMESTAMP"
+                )
+            )
+            conn.execute(
+                text(
+                    "ALTER TABLE audit_runs ALTER COLUMN created_at SET NOT NULL"
+                )
+            )

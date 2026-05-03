@@ -1,0 +1,6 @@
+id: SEC039_LAMBDA_CODE_SIGNING_ZIP
+pillar: security
+severity: medium
+war_theme: SEC08
+description: ZIP-based Lambda deployments should use code signing configuration.
+evaluator: lambda_code_signing_enabled_zip

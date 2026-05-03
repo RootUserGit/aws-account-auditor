@@ -1,0 +1,6 @@
+id: SEC018_CLOUDTRAIL_LOG_FILE_VALIDATION
+pillar: security
+severity: medium
+war_theme: SEC06
+description: Active trails should enable log file validation for integrity.
+evaluator: cloudtrail_log_file_validation

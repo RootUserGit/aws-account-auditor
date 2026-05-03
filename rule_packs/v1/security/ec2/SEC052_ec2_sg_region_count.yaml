@@ -1,0 +1,6 @@
+id: SEC052_EC2_SECURITY_GROUPS_REGION_COUNT
+pillar: security
+severity: low
+war_theme: SEC05
+description: Very high per-Region security group counts warrant cleanup and governance (Trend EC2 hygiene).
+evaluator: ec2_security_groups_region_count_review

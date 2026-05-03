@@ -1,0 +1,6 @@
+id: SEC063_EC2_MODERN_INSTANCE_FAMILY
+pillar: security
+severity: medium
+war_theme: COST07
+description: Avoid legacy EC2 instance families that lack modern performance and efficiency characteristics (security + cost posture).
+evaluator: ec2_instances_modern_instance_family

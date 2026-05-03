@@ -1,0 +1,6 @@
+id: SEC033_LAMBDA_DEAD_LETTER
+pillar: security
+severity: medium
+war_theme: REL05
+description: Lambda functions should configure a dead-letter queue or target for failed async invokes.
+evaluator: lambda_dead_letter_configured

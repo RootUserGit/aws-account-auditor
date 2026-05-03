@@ -1,0 +1,6 @@
+id: COST013_EC2_RESERVED_INSTANCES_EXPIRING
+pillar: cost
+severity: medium
+war_theme: COST07
+description: Track EC2 Reserved Instances expiring within ~60 days to avoid unexpected on-demand spend (Trend RI expiration).
+evaluator: ec2_reserved_instances_expiring_review

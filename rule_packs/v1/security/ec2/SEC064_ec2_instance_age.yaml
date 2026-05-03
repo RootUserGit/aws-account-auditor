@@ -1,0 +1,6 @@
+id: SEC064_EC2_INSTANCE_LAUNCH_AGE
+pillar: security
+severity: low
+war_theme: REL10
+description: Long-running EC2 instances should be refreshed via automated image pipelines (Trend EC2 instance age).
+evaluator: ec2_instances_launch_age_review

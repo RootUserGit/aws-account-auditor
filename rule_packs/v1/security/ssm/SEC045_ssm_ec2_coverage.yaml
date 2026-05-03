@@ -1,0 +1,6 @@
+id: SEC045_SSM_EC2_MANAGED_COVERAGE
+pillar: security
+severity: medium
+war_theme: OPS08
+description: EC2 fleets should appear in AWS Systems Manager managed inventory where Session Manager/patching applies (Trend SSM).
+evaluator: ssm_managed_ec2_coverage

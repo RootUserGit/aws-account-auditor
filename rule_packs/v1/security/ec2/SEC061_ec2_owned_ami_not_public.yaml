@@ -1,0 +1,6 @@
+id: SEC061_EC2_OWNED_AMI_NOT_PUBLIC
+pillar: security
+severity: critical
+war_theme: SEC08
+description: Owned AMIs must not grant public launch permissions (Trend publicly shared AMI).
+evaluator: ec2_owned_ami_not_publicly_shared

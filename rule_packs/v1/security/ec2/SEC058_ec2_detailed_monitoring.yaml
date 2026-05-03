@@ -1,0 +1,6 @@
+id: SEC058_EC2_DETAILED_MONITORING
+pillar: security
+severity: low
+war_theme: OPS08
+description: Enable detailed CloudWatch monitoring for EC2 instances that require tighter operational visibility (Trend EC2 monitoring).
+evaluator: ec2_detailed_monitoring_enabled

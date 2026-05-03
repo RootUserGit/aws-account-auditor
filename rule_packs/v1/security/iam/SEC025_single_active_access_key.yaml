@@ -1,0 +1,6 @@
+id: SEC025_IAM_SINGLE_ACTIVE_ACCESS_KEY
+pillar: security
+severity: low
+war_theme: SEC03
+description: Limit IAM users to one active access key unless documented exceptions exist.
+evaluator: iam_single_active_access_key_per_user

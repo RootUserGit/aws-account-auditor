@@ -1,0 +1,6 @@
+id: SEC013_EBS_DEFAULT_ENCRYPTION
+pillar: security
+severity: high
+war_theme: SEC08
+description: EBS encryption by default should be on in active Regions.
+evaluator: ebs_default_encryption_all_sampled_regions

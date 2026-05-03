@@ -1,0 +1,6 @@
+id: SEC030_IAM_NO_EMPTY_GROUPS
+pillar: security
+severity: low
+war_theme: SEC03
+description: IAM groups without any members should be removed or assigned users.
+evaluator: iam_no_unused_empty_groups

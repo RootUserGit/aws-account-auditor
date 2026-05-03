@@ -1,0 +1,6 @@
+id: COST006_UNATTACHED_EBS_VOLUMES
+pillar: cost
+severity: medium
+war_theme: COST04
+description: Detached EBS volumes continue to bill until deleted.
+evaluator: cost_unattached_ebs_volumes

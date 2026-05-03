@@ -33,6 +33,8 @@ async function forward(
   const outHeaders = new Headers();
   const copyCt = res.headers.get("content-type");
   if (copyCt) outHeaders.set("content-type", copyCt);
+  const totalCount = res.headers.get("x-total-count");
+  if (totalCount) outHeaders.set("X-Total-Count", totalCount);
 
   return new NextResponse(await res.arrayBuffer(), {
     status: res.status,

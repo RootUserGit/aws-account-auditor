@@ -1,0 +1,6 @@
+id: SEC038_LAMBDA_ROLE_NO_ADMIN
+pillar: security
+severity: critical
+war_theme: SEC02
+description: Lambda execution roles must not attach AdministratorAccess.
+evaluator: lambda_execution_role_no_admin_access

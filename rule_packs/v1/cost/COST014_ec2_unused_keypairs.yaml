@@ -1,0 +1,6 @@
+id: COST014_EC2_UNUSED_KEY_PAIRS
+pillar: cost
+severity: low
+war_theme: COST09
+description: Remove unused EC2 key pairs after adopting IAM instance profiles or Session Manager (Trend unused keys).
+evaluator: ec2_unused_key_pairs_cleanup

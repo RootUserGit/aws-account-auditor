@@ -1,0 +1,6 @@
+id: SEC043_EC2_IMDSV2_REQUIRED
+pillar: security
+severity: high
+war_theme: SEC02
+description: EC2 instances should require IMDSv2 (HttpTokens=required) when the metadata service is enabled.
+evaluator: ec2_imdsv2_required

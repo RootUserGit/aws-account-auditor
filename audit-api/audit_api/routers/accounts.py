@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from datetime import datetime, timezone
+from typing import Any
 from uuid import UUID
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
@@ -8,9 +9,11 @@ from sqlalchemy import delete
 from sqlalchemy.orm import Session
 
 from audit_api.deps import get_db, verify_api_key
+from audit_api.run_list import audit_run_to_list_item
 from audit_api.schemas import AwsAccountCreate, AwsAccountOut
+from audit_api.services.permission_precheck import precheck_failure_http_detail, run_permission_precheck
 from audit_api.services.sts import verify_assume_role
-from audit_core.models import Artifact, AuditRun, AwsAccount, AwsAccountStatus, Finding, Organization
+from audit_core.models import Artifact, AuditRun, AuditRunStatus, AwsAccount, AwsAccountStatus, Finding, Organization
 
 router = APIRouter(prefix="/accounts", tags=["accounts"])
 
@@ -119,22 +122,60 @@ def enqueue_run(
     account_id: UUID,
     db: Session = Depends(get_db),
     _: None = Depends(verify_api_key),
-) -> dict[str, str]:
+) -> dict[str, Any]:
     from redis import Redis
     from rq import Queue
 
     from audit_agents.worker import process_audit_run
     from audit_api.settings import settings
-    from audit_core.models import AuditRun, AuditRunStatus
-
     org = _default_org(db)
     acc = db.query(AwsAccount).filter(AwsAccount.id == account_id, AwsAccount.org_id == org.id).first()
     if not acc:
         raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Account not found")
-    run = AuditRun(account_id=acc.id, status=AuditRunStatus.queued.value, rule_pack_version="v1")
+
+    active = (
+        db.query(AuditRun)
+        .filter(
+            AuditRun.account_id == acc.id,
+            AuditRun.status.in_([AuditRunStatus.queued.value, AuditRunStatus.running.value]),
+        )
+        .first()
+    )
+    if active:
+        raise HTTPException(
+            status.HTTP_409_CONFLICT,
+            detail={
+                "message": "An audit is already queued or running for this account. Wait for it to finish before starting another.",
+                "active_run_id": str(active.id),
+                "active_run_status": active.status,
+            },
+        )
+
+    precheck = run_permission_precheck(acc.role_arn, acc.external_id)
+    if precheck.blocking:
+        raise HTTPException(
+            status.HTTP_422_UNPROCESSABLE_ENTITY,
+            detail=precheck_failure_http_detail(precheck),
+        )
+
+    run = AuditRun(
+        account_id=acc.id,
+        status=AuditRunStatus.queued.value,
+        rule_pack_version="v1",
+    )
     db.add(run)
     db.commit()
     db.refresh(run)
     q = Queue(connection=Redis.from_url(settings.redis_url))
-    q.enqueue(process_audit_run, str(run.id))
-    return {"run_id": str(run.id), "status": run.status}
+    job = q.enqueue(process_audit_run, str(run.id), job_timeout=settings.audit_job_timeout_seconds)
+    jid = getattr(job, "id", None)
+    run.rq_job_id = str(jid) if jid is not None else None
+    db.commit()
+    out: dict[str, Any] = {
+        "run_id": str(run.id),
+        "status": run.status,
+        "run": audit_run_to_list_item(run, acc.account_id).model_dump(mode="json"),
+    }
+    if precheck.warnings:
+        out["precheck_warnings"] = precheck.warnings
+    return out
