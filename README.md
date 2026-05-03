@@ -2,6 +2,12 @@
 
 Mono-repo aligned with the AWS Audit Agentic Platform plan: **Security + Cost** pillars, cross-account IAM role onboarding, async audits via Redis/RQ, LangGraph orchestration, and Next.js UI.
 
+## Architecture
+
+Stack overview (services, data stores, and how traffic flows through the platform):
+
+![Architecture diagram](Architecture-diagram.png)
+
 ## Layout
 
 | Directory | Role |
