@@ -84,20 +84,29 @@ const FALLBACK_IANA_ZONES: string[] = [
 export function getAllIanaTimeZones(): string[] {
   if (_allZonesMemo) return _allZonesMemo;
   try {
-    const sv = Intl.supportedValuesOf as ((this: typeof Intl, key: string) => string[]) | undefined;
+    const sv = Intl.supportedValuesOf as
+      | ((this: typeof Intl, key: string) => string[])
+      | undefined;
     if (typeof sv === "function") {
-      _allZonesMemo = [...sv.call(Intl, "timeZone")].sort((a, b) => a.localeCompare(b));
+      _allZonesMemo = [...sv.call(Intl, "timeZone")].sort((a, b) =>
+        a.localeCompare(b),
+      );
       return _allZonesMemo;
     }
   } catch {
     /* use fallback */
   }
-  _allZonesMemo = [...new Set(FALLBACK_IANA_ZONES)].sort((a, b) => a.localeCompare(b));
+  _allZonesMemo = [...new Set(FALLBACK_IANA_ZONES)].sort((a, b) =>
+    a.localeCompare(b),
+  );
   return _allZonesMemo;
 }
 
 /** Sample instants (mid-year + winter) so DST naming differences still produce usable labels */
-const SEARCH_SAMPLE_TS = [Date.UTC(2024, 6, 15, 12, 0, 0), Date.UTC(2024, 0, 15, 12, 0, 0)];
+const SEARCH_SAMPLE_TS = [
+  Date.UTC(2024, 6, 15, 12, 0, 0),
+  Date.UTC(2024, 0, 15, 12, 0, 0),
+];
 
 function collectIntlTimeZoneLabels(zone: string): string {
   const seen = new Set<string>();
@@ -110,7 +119,9 @@ function collectIntlTimeZoneLabels(zone: string): string {
           timeZone: zone,
           timeZoneName: style,
         }).formatToParts(d);
-        const v = formatted.find((p) => p.type === "timeZoneName")?.value?.trim();
+        const v = formatted
+          .find((p) => p.type === "timeZoneName")
+          ?.value?.trim();
         if (!v || /^gmt[+-]/i.test(v) || /^utc$/i.test(v)) continue;
         const key = v.toLowerCase();
         if (!seen.has(key)) {
@@ -126,7 +137,10 @@ function collectIntlTimeZoneLabels(zone: string): string {
 }
 
 function ianaWordsBlob(zone: string): string {
-  return zone.toLowerCase().replace(/[/ _]+/g, " ").trim();
+  return zone
+    .toLowerCase()
+    .replace(/[/ _]+/g, " ")
+    .trim();
 }
 
 type ZoneSearchEntry = {
@@ -187,24 +201,35 @@ function tokenMatchesStrict(entry: ZoneSearchEntry, token: string): boolean {
 }
 
 /** Prefix match on Intl labels only (e.g. "pakis" → Pakistan Standard Time), avoids Indiana vs India on path tokens */
-function tokenMatchesDisplayPrefix(displayLower: string, token: string): boolean {
+function tokenMatchesDisplayPrefix(
+  displayLower: string,
+  token: string,
+): boolean {
   if (token.length < 4) return false;
   const words = displayLower.match(/[a-z0-9]+/g) ?? [];
   return words.some((w) => w.startsWith(token));
 }
 
 function tokenMatchesEntry(entry: ZoneSearchEntry, token: string): boolean {
-  return tokenMatchesStrict(entry, token) || tokenMatchesDisplayPrefix(entry.displayLower, token);
+  return (
+    tokenMatchesStrict(entry, token) ||
+    tokenMatchesDisplayPrefix(entry.displayLower, token)
+  );
 }
 
 function rankMatch(entry: ZoneSearchEntry, tokens: string[]): number {
   let score = 0;
   for (const token of tokens) {
     const words = [token, ...alternatesForToken(token)];
-    const hitDisplayBoundary = words.some((w) => wordBoundaryMatch(entry.displayLower, w));
-    const hitIanaBoundary = words.some((w) => wordBoundaryMatch(entry.ianaLower, w));
+    const hitDisplayBoundary = words.some((w) =>
+      wordBoundaryMatch(entry.displayLower, w),
+    );
+    const hitIanaBoundary = words.some((w) =>
+      wordBoundaryMatch(entry.ianaLower, w),
+    );
     const hitDisplayPrefix =
-      !hitDisplayBoundary && tokenMatchesDisplayPrefix(entry.displayLower, token);
+      !hitDisplayBoundary &&
+      tokenMatchesDisplayPrefix(entry.displayLower, token);
 
     if (hitDisplayBoundary) score += 100;
     else if (hitDisplayPrefix) score += 60;
@@ -217,7 +242,10 @@ function rankMatch(entry: ZoneSearchEntry, tokens: string[]): number {
  * Filter IANA zones by search query: matches country/city names via Intl labels as well as zone ids.
  * Uses word-boundary matching first so "india" finds India Standard Time, not Indiana.
  */
-export function filterIanaZonesBySearch(zones: string[], query: string): string[] {
+export function filterIanaZonesBySearch(
+  zones: string[],
+  query: string,
+): string[] {
   const raw = query.trim().toLowerCase();
   if (!raw) return zones;
   const tokens = raw.split(/\s+/).filter(Boolean);
@@ -241,7 +269,9 @@ export function filterIanaZonesBySearch(zones: string[], query: string): string[
     });
   }
 
-  const fallback = zones.filter((z) => tokens.every((t) => z.toLowerCase().includes(t)));
+  const fallback = zones.filter((z) =>
+    tokens.every((t) => z.toLowerCase().includes(t)),
+  );
   return fallback.sort((a, b) => a.localeCompare(b));
 }
 
