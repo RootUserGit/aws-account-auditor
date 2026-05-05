@@ -1,17 +1,13 @@
 "use client";
 
 import Link from "next/link";
+
+import { InlineLoader } from "@/components/InlineLoader";
 import {
   FINDINGS_PAGE_SIZE,
   PILLAR_LABELS,
   PILLAR_ORDER,
 } from "@/lib/constants/dashboard";
-
-const PILLAR_ORDER_SET = new Set<string>(PILLAR_ORDER);
-
-function isOrderedPillar(pillar: string): boolean {
-  return PILLAR_ORDER_SET.has(pillar);
-}
 import {
   colorForCheckStatus,
   colorForSeverity,
@@ -23,6 +19,12 @@ import type {
   RunDetailState,
   StructuredGroup,
 } from "@/lib/types/dashboard";
+
+const PILLAR_ORDER_SET = new Set<string>(PILLAR_ORDER);
+
+function isOrderedPillar(pillar: string): boolean {
+  return PILLAR_ORDER_SET.has(pillar);
+}
 
 export type DashboardGroupedFindingsProps = {
   readonly runId: string;
@@ -104,7 +106,7 @@ export function DashboardGroupedFindings({
                 checks
               </span>
             </summary>
-            <div className="border-t border-[var(--border)] px-2 pb-3 space-y-1">
+            <div className="border-t border-[var(--border)] p-3 space-y-3">
               {structuredGroups
                 .filter((g) => g.pillar === pillar)
                 .map(({ severity, count }) => {
@@ -144,9 +146,9 @@ export function DashboardGroupedFindings({
                       </summary>
                       <div className="border-t border-[var(--border)]/60 px-2 py-3 space-y-2">
                         {pageState?.loaded ? null : (
-                          <p className="text-xs dash-text-muted px-2">
-                            Loading…
-                          </p>
+                          <div className="flex justify-center py-6 px-2">
+                            <InlineLoader label="Loading findings…" size="xs" />
+                          </div>
                         )}
                         {pageState?.loaded && pageState.items.length === 0 ? (
                           <p className="text-xs dash-text-muted px-2">
@@ -209,6 +211,7 @@ export function DashboardGroupedFindings({
                                     <Link
                                       href={`/dashboard/runs/${encodeURIComponent(runId)}/findings/${encodeURIComponent(f.id)}`}
                                       className="inline-flex items-center gap-1 text-xs font-medium dash-link hover:underline"
+                                      target="_blank"
                                     >
                                       Open full evidence view →
                                     </Link>

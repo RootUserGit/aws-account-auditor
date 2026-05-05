@@ -40,7 +40,7 @@ export function AppChrome({ children }: { children: React.ReactNode }) {
   const pathname = usePathname() ?? "/";
   const router = useRouter();
   const { setTheme, resolvedTheme } = useTheme();
-  const [navOpen, setNavOpen] = useState(false);
+  const [navOpen, setNavOpen] = useState(true);
 
   const activeNavHref = useMemo(() => {
     if (pathname === "/") return "/";

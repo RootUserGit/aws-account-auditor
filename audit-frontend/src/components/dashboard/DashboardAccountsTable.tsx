@@ -20,6 +20,7 @@ export type DashboardAccountsTableProps = {
   accountScanBlocked: (platformAccountId: string) => boolean;
   startingAccountId: string | null;
   onStartRun: (platformAccountUuid: string) => void;
+  loading?: boolean;
 };
 
 export function DashboardAccountsTable({
@@ -27,6 +28,7 @@ export function DashboardAccountsTable({
   accountScanBlocked,
   startingAccountId,
   onStartRun,
+  loading = false,
 }: Readonly<DashboardAccountsTableProps>) {
   return (
     <Container
@@ -42,6 +44,8 @@ export function DashboardAccountsTable({
       <Table
         trackBy="id"
         variant="embedded"
+        loading={loading}
+        loadingText="Loading accounts"
         empty={
           <Box textAlign="center" color="text-body-secondary" padding="l">
             No accounts onboarded yet. Use <strong>Onboard AWS account</strong>{" "}

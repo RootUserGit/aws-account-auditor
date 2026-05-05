@@ -89,12 +89,45 @@ body {
   .dash-surface-nested {
     background-color: var(--dash-surface-nested);
   }
+
+  .dash-meta-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    letter-spacing: 0.02em;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
+    background: color-mix(in srgb, var(--panel) 62%, transparent);
+    color: var(--dash-text-secondary);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
+    transition:
+      border-color 0.15s ease,
+      background-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  html.light .dash-meta-pill {
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  }
+
+  .dash-meta-pill:hover {
+    border-color: color-mix(in srgb, var(--border) 82%, var(--dash-text-muted));
+    background: color-mix(in srgb, var(--panel-hover) 48%, transparent);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  }
+
+  .dash-meta-pill--tinted:hover {
+    filter: brightness(1.07);
+  }
 }
 
 .dashboard-tailwind-surface {
   border-radius: 4px;
   padding: 16px;
-  background-color: var(--dash-surface-wrap);
 }
 
 #audit-app-header.audit-app-header {

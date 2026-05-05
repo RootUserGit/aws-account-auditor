@@ -8,7 +8,7 @@ import {
 export function DashboardPageSkeleton() {
   return (
     <div
-      className="dashboard-tailwind-surface w-full max-w-[1440px] mx-auto space-y-8"
+      className="dashboard-tailwind-surface bg-[var(--dash-surface-wrap)] w-full max-w-[1440px] mx-auto space-y-8"
       aria-label="Loading dashboard"
     >
       <SkeletonBreadcrumbRow />

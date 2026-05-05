@@ -3,7 +3,7 @@ import { SkeletonBar, SkeletonPanel } from "./SkeletonPrimitives";
 export function FindingDetailPageSkeleton() {
   return (
     <div
-      className="dashboard-tailwind-surface w-full max-w-[1200px] mx-auto space-y-6"
+      className="dashboard-tailwind-surface bg-[var(--dash-surface-wrap)] w-full max-w-[1200px] mx-auto space-y-6"
       aria-label="Loading finding"
     >
       <div className="flex flex-wrap items-center gap-2" aria-hidden>

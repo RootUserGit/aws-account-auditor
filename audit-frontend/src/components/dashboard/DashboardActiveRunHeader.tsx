@@ -1,6 +1,7 @@
 "use client";
 
 import Button from "@cloudscape-design/components/button";
+import { InlineLoader } from "@/components/InlineLoader";
 import { apiEndpoints } from "@/lib/api/api-endpoints";
 import {
   runStatusClassName,
@@ -15,6 +16,7 @@ export type DashboardActiveRunHeaderProps = {
   readonly terminal: boolean;
   readonly scanClockMs: number;
   readonly refetchBusy: boolean;
+  readonly detailLoading?: boolean;
   readonly onRefresh: () => void;
   readonly onCancelRun: () => void;
   readonly onClosePanel: () => void;
@@ -26,6 +28,7 @@ export function DashboardActiveRunHeader({
   terminal,
   scanClockMs,
   refetchBusy,
+  detailLoading = false,
   onRefresh,
   onCancelRun,
   onClosePanel,
@@ -41,15 +44,21 @@ export function DashboardActiveRunHeader({
         <p className="text-xs font-mono dash-text-muted mt-1 break-all">
           {runId}
         </p>
-        <p className="text-sm dash-text-secondary mt-2">
-          Status:{" "}
-          <span className={runStatusClassName(run?.status ?? "")}>
-            {runStatusLabel(run?.status ?? "…")}
-          </span>
-          {terminal ? (
-            <span className="dash-text-subtle ml-2">· polling paused</span>
+        <p className="text-sm dash-text-secondary mt-2 flex flex-wrap items-center gap-x-2 gap-y-1">
+          <span className="shrink-0">Status:</span>
+          {detailLoading ? (
+            <InlineLoader label="Fetching run details…" size="xs" />
           ) : (
-            <span className="text-aws-orange ml-2">· live updates</span>
+            <>
+              <span className={runStatusClassName(run?.status ?? "")}>
+                {runStatusLabel(run?.status ?? "…")}
+              </span>
+              {terminal ? (
+                <span className="dash-text-subtle">· polling paused</span>
+              ) : (
+                <span className="text-aws-orange">· live updates</span>
+              )}
+            </>
           )}
         </p>
         {queued ? (
@@ -88,7 +97,7 @@ export function DashboardActiveRunHeader({
         <Button disabled={refetchBusy} onClick={onRefresh}>
           {refetchBusy ? "Refreshing…" : "Refresh"}
         </Button>
-        {terminal ? null : (
+        {terminal || detailLoading ? null : (
           <button
             type="button"
             onClick={onCancelRun}

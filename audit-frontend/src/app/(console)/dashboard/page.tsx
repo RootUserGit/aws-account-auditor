@@ -103,7 +103,9 @@ function DashboardContent() {
   const runId = UUID_RE.test(runParam) ? runParam : "";
 
   const [accounts, setAccounts] = useState<Account[]>([]);
+  const [accountsLoading, setAccountsLoading] = useState(true);
   const [scanHistory, setScanHistory] = useState<ScanHistoryRow[]>([]);
+  const [scanHistoryLoading, setScanHistoryLoading] = useState(true);
   const [run, setRun] = useState<RunDetailState | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [refetchBusy, setRefetchBusy] = useState(false);
@@ -150,22 +152,28 @@ function DashboardContent() {
     >
   >({});
 
-  const loadScanHistory = useCallback(async () => {
-    try {
-      const skip = historyPage * HISTORY_PAGE_SIZE;
-      const res = await api.fetchRunsList(skip, HISTORY_PAGE_SIZE);
-      if (!isHttpOk(res.status)) return;
-      const total = Number.parseInt(
-        String(res.headers["x-total-count"] ?? "0"),
-        10,
-      );
-      if (!Number.isNaN(total)) setHistoryTotal(total);
-      const rows = res.data;
-      if (Array.isArray(rows)) setScanHistory(rows as ScanHistoryRow[]);
-    } catch {
-      /* ignore */
-    }
-  }, [api, historyPage]);
+  const loadScanHistory = useCallback(
+    async (opts?: { readonly showTableLoading?: boolean }) => {
+      const showLoader = opts?.showTableLoading === true;
+      if (showLoader) setScanHistoryLoading(true);
+      try {
+        const skip = historyPage * HISTORY_PAGE_SIZE;
+        const res = await api.fetchRunsList(skip, HISTORY_PAGE_SIZE);
+        if (!isHttpOk(res.status)) return;
+        const total = Number.parseInt(
+          String(res.headers["x-total-count"] ?? "0"),
+          10,
+        );
+        if (!Number.isNaN(total)) setHistoryTotal(total);
+        const rows = res.data;
+        if (Array.isArray(rows)) setScanHistory(rows as ScanHistoryRow[]);
+      } catch {
+      } finally {
+        if (showLoader) setScanHistoryLoading(false);
+      }
+    },
+    [api, historyPage],
+  );
 
   useEffect(() => {
     queueMicrotask(() => {
@@ -193,6 +201,10 @@ function DashboardContent() {
   }
 
   useEffect(() => {
+    let cancelled = false;
+    queueMicrotask(() => {
+      if (!cancelled) setAccountsLoading(true);
+    });
     api
       .fetchAccounts()
       .then(async (r) => {
@@ -219,11 +231,17 @@ function DashboardContent() {
       .catch(() => {
         setAccounts([]);
         setErr("Failed to load accounts");
+      })
+      .finally(() => {
+        if (!cancelled) setAccountsLoading(false);
       });
+    return () => {
+      cancelled = true;
+    };
   }, [api]);
 
   useEffect(() => {
-    queueMicrotask(() => void loadScanHistory());
+    queueMicrotask(() => void loadScanHistory({ showTableLoading: true }));
   }, [loadScanHistory]);
 
   useEffect(() => {
@@ -615,6 +633,8 @@ function DashboardContent() {
       .sort((a, b) => statusRank(a.name) - statusRank(b.name));
   }, [summary?.by_status]);
 
+  const runDetailLoading = Boolean(runId) && run === null && err === null;
+
   const structuredGroups = useMemo((): StructuredGroup[] => {
     const out: StructuredGroup[] = [];
     if (!mergedGroups && !mergedFailedGroups) return out;
@@ -700,6 +720,7 @@ function DashboardContent() {
             accounts={accounts}
             accountScanBlocked={accountScanBlocked}
             startingAccountId={startingAccountId}
+            loading={accountsLoading}
             onStartRun={(platformAccountUuid: string) =>
               void startRun(platformAccountUuid)
             }
@@ -711,12 +732,13 @@ function DashboardContent() {
             scanClockMs={scanClockMs}
             displayTz={displayTz}
             onDisplayTzChange={persistDisplayTz}
-            onRefresh={() => void loadScanHistory()}
+            onRefresh={() => void loadScanHistory({ showTableLoading: true })}
             historyPage={historyPage}
             historyTotal={historyTotal}
             onHistoryPageChange={setHistoryPage}
             onCancelScan={(targetRunId: string) => void cancelScan(targetRunId)}
             onOpenRun={openRun}
+            loading={scanHistoryLoading}
           />
 
           {runId ? (
@@ -727,6 +749,7 @@ function DashboardContent() {
                 terminal={terminal}
                 scanClockMs={scanClockMs}
                 refetchBusy={refetchBusy}
+                detailLoading={runDetailLoading}
                 onRefresh={() => void manualRefetch()}
                 onCancelRun={() => void cancelScan(runId)}
                 onClosePanel={clearRunView}

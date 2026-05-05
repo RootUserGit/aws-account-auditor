@@ -68,9 +68,16 @@ function ScanRowActions({
       <SpaceBetween direction="vertical" size="xs">
         <Box fontSize="body-s" color="text-status-info">
           Scan in progress ·{" "}
-          {startMs != null ? formatDurationMs(scanClockMs - startMs) : "—"}
+          {startMs == null ? "—" : formatDurationMs(scanClockMs - startMs)}
         </Box>
-        <Button variant="link" onClick={() => onCancelScan(row.id)}>
+        <Button
+          variant="normal"
+          onClick={() => onCancelScan(row.id)}
+          nativeButtonAttributes={{
+            className:
+              "!text-[13px] !leading-tight !px-2 !py-1 !min-h-0 !h-auto !whitespace-nowrap ",
+          }}
+        >
           Stop scan
         </Button>
       </SpaceBetween>
@@ -118,6 +125,7 @@ export type DashboardScanHistoryTableProps = {
   onHistoryPageChange: (pageIndex: number) => void;
   onCancelScan: (id: string) => void;
   onOpenRun: (id: string) => void;
+  loading?: boolean;
 };
 
 export function DashboardScanHistoryTable({
@@ -132,6 +140,7 @@ export function DashboardScanHistoryTable({
   onHistoryPageChange,
   onCancelScan,
   onOpenRun,
+  loading = false,
 }: Readonly<DashboardScanHistoryTableProps>) {
   const pagesCount = Math.max(
     1,
@@ -164,6 +173,8 @@ export function DashboardScanHistoryTable({
         <Table
           trackBy="id"
           variant="embedded"
+          loading={loading}
+          loadingText="Loading scan history"
           empty={
             <Box textAlign="center" color="text-body-secondary" padding="l">
               No runs on this page — start an audit from a connected account or

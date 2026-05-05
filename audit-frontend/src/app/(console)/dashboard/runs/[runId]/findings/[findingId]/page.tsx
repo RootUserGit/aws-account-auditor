@@ -9,20 +9,25 @@ import { useParams, useRouter } from "next/navigation";
 import { useCallback } from "react";
 
 import { EvidenceAutoTables } from "@/components/EvidenceAutoTables";
+import { InlineLoader } from "@/components/InlineLoader";
 import { PaginatedTable } from "@/components/PaginatedTable";
 import { useFindingDetail } from "@/hooks";
+import {
+  colorForCheckStatus,
+  colorForSeverity,
+} from "@/lib/utils/dashboard-chart";
 
 function ageBadgeClass(days: number | null | undefined): string {
   if (days == null || Number.isNaN(days)) {
-    return "bg-slate-800 text-slate-400 border border-slate-600";
+    return "bg-slate-100 text-slate-700 border border-slate-300 dark:bg-slate-800 dark:text-slate-400 dark:border-slate-600";
   }
   if (days <= 90) {
-    return "bg-emerald-950 text-emerald-300 border border-emerald-800";
+    return "bg-emerald-100 text-emerald-900 border border-emerald-300 dark:bg-emerald-950 dark:text-emerald-300 dark:border-emerald-800";
   }
   if (days <= 365) {
-    return "bg-amber-950 text-amber-200 border border-amber-800";
+    return "bg-amber-100 text-amber-900 border border-amber-300 dark:bg-amber-950 dark:text-amber-200 dark:border-amber-800";
   }
-  return "bg-red-950 text-red-200 border border-red-800";
+  return "bg-red-100 text-red-900 border border-red-300 dark:bg-red-950 dark:text-red-200 dark:border-red-800";
 }
 
 function fmtTs(v: unknown): string {
@@ -68,7 +73,7 @@ function JsonBlock({ value }: Readonly<{ value: unknown }>) {
     text = String(value);
   }
   return (
-    <pre className="text-xs bg-[var(--panel)] border border-[var(--border)] rounded-lg p-4 overflow-auto max-h-[32rem] text-slate-300 font-mono">
+    <pre className="text-xs bg-[var(--panel)] border border-[var(--border)] rounded-lg p-4 overflow-auto max-h-[32rem] dash-text-secondary font-mono">
       {text}
     </pre>
   );
@@ -79,7 +84,7 @@ export default function FindingDetailPage() {
   const params = useParams<{ runId: string; findingId: string }>();
   const runId = params.runId ?? "";
   const findingId = params.findingId ?? "";
-  const { run, finding, err } = useFindingDetail(runId, findingId);
+  const { run, finding, err, loading } = useFindingDetail(runId, findingId);
 
   const onBreadcrumbFollow = useCallback(
     (event: CustomEvent) => {
@@ -155,22 +160,71 @@ export default function FindingDetailPage() {
           ) : null}
 
           {err && (
-            <p className="text-red-300 text-sm border border-red-900/60 bg-red-950/30 rounded-lg p-3">
+            <p
+              className="text-sm rounded-lg border px-3 py-3 text-red-900 bg-red-50 border-red-200 dark:text-red-300 dark:bg-red-950/30 dark:border-red-900/60"
+              role="alert"
+            >
               {err}
             </p>
           )}
 
+          {loading && runId && findingId && !err ? (
+            <div
+              className="flex min-h-[12rem] items-center justify-center rounded-xl border border-[var(--border)] dash-surface-nested px-4 py-10"
+              aria-busy="true"
+            >
+              <InlineLoader label="Loading finding…" />
+            </div>
+          ) : null}
+
           {finding && (
             <>
-              <section className="flex flex-wrap gap-3 text-sm">
-                <span className="rounded-lg border border-[var(--border)] px-3 py-1 text-slate-300 bg-[var(--panel)]/60">
-                  Pillar: {finding.pillar}
+              <section
+                className="flex flex-wrap items-stretch gap-2 sm:gap-3"
+                aria-label="Finding metadata"
+              >
+                <span className="dash-meta-pill items-center">
+                  <span className="dash-text-muted font-normal text-[11px] uppercase tracking-wide shrink-0">
+                    Pillar
+                  </span>
+                  <span aria-hidden className="dash-text-subtle select-none">
+                    ·
+                  </span>
+                  <span className="dash-text-primary capitalize">
+                    {finding.pillar}
+                  </span>
                 </span>
-                <span className="rounded-lg border border-[var(--border)] px-3 py-1 text-slate-300 bg-[var(--panel)]/60">
-                  Severity: {finding.severity}
+                <span
+                  className="dash-meta-pill dash-meta-pill--tinted items-center capitalize"
+                  style={{
+                    color: colorForSeverity(finding.severity),
+                    borderColor: `${colorForSeverity(finding.severity)}55`,
+                    background: `${colorForSeverity(finding.severity)}14`,
+                  }}
+                >
+                  <span className="opacity-[0.85] font-normal text-[11px] uppercase tracking-wide shrink-0">
+                    Severity
+                  </span>
+                  <span aria-hidden className="opacity-50 select-none">
+                    ·
+                  </span>
+                  <span className="capitalize">{finding.severity}</span>
                 </span>
-                <span className="rounded-lg border border-[var(--border)] px-3 py-1 capitalize text-slate-200 bg-[var(--panel)]/60">
-                  Status: {finding.status}
+                <span
+                  className="dash-meta-pill dash-meta-pill--tinted items-center capitalize"
+                  style={{
+                    color: colorForCheckStatus(finding.status),
+                    borderColor: `${colorForCheckStatus(finding.status)}55`,
+                    background: `${colorForCheckStatus(finding.status)}14`,
+                  }}
+                >
+                  <span className="opacity-[0.85] font-normal text-[11px] uppercase tracking-wide shrink-0">
+                    Status
+                  </span>
+                  <span aria-hidden className="opacity-50 select-none">
+                    ·
+                  </span>
+                  <span className="capitalize">{finding.status}</span>
                 </span>
               </section>
 
@@ -179,29 +233,29 @@ export default function FindingDetailPage() {
                 typeof evObj.error === "string" &&
                 evObj.error.startsWith("unknown_evaluator:") && (
                   <section
-                    className="rounded-xl border border-amber-700/45 bg-amber-950/30 p-5 space-y-2"
+                    className="rounded-xl border border-amber-300/90 bg-amber-50 p-5 space-y-2 dark:border-amber-700/45 dark:bg-amber-950/30"
                     role="alert"
                   >
-                    <h2 className="text-xs font-medium uppercase tracking-wider text-amber-200/95">
+                    <h2 className="text-xs font-medium uppercase tracking-wider text-amber-900 dark:text-amber-200/95">
                       Rule could not run on the worker
                     </h2>
-                    <p className="text-sm text-slate-200 leading-relaxed">
+                    <p className="text-sm text-amber-950 dark:text-slate-200 leading-relaxed">
                       The audit worker received this check from the rule pack,
                       but its Python process does not register an evaluator
                       named{" "}
-                      <code className="text-amber-100/90 font-mono text-xs">
+                      <code className="font-mono text-xs text-amber-950 dark:text-amber-100/90 bg-amber-100/80 dark:bg-transparent px-1 rounded">
                         {String(evObj.error).replace(/^unknown_evaluator:/, "")}
                       </code>
                       . That almost always means the{" "}
-                      <strong className="font-medium text-slate-100">
+                      <strong className="font-medium text-amber-950 dark:text-slate-100">
                         worker container or package is outdated
                       </strong>{" "}
                       — rebuild and redeploy{" "}
-                      <span className="font-mono text-slate-300">
+                      <span className="font-mono text-amber-900 dark:text-slate-300">
                         audit-worker
                       </span>{" "}
                       from the same commit as{" "}
-                      <span className="font-mono text-slate-300">
+                      <span className="font-mono text-amber-900 dark:text-slate-300">
                         audit-agents
                       </span>
                       , then run a new scan.
@@ -214,11 +268,11 @@ export default function FindingDetailPage() {
                   typeof evObj?.error === "string" &&
                   evObj.error.startsWith("unknown_evaluator:")
                 ) && (
-                  <section className="rounded-xl border border-aws-orange/35 bg-aws-orange/5 p-5">
+                  <section className="rounded-xl border border-orange-200 bg-orange-50/90 p-5 dark:border-aws-orange/35 dark:bg-aws-orange/5 my-4">
                     <h2 className="text-xs font-medium uppercase tracking-wider text-aws-orange mb-2">
                       Remediation summary
                     </h2>
-                    <p className="text-sm text-slate-200 leading-relaxed">
+                    <p className="text-sm dash-text-secondary leading-relaxed">
                       {finding.remediation_hint}
                     </p>
                   </section>
@@ -227,8 +281,8 @@ export default function FindingDetailPage() {
               {finding.remediation_hint &&
                 typeof evObj?.error === "string" &&
                 evObj.error.startsWith("unknown_evaluator:") && (
-                  <section className="rounded-xl border border-slate-600/50 bg-[var(--panel)]/50 p-4">
-                    <p className="text-xs text-slate-500">
+                  <section className="rounded-xl border border-[var(--border)] bg-[var(--panel)]/50 p-4">
+                    <p className="text-xs dash-text-muted leading-relaxed">
                       Generic remediation text is hidden for this row because
                       the check did not execute — fix the worker version first.
                     </p>
@@ -236,11 +290,11 @@ export default function FindingDetailPage() {
                 )}
 
               {playbook.length > 0 && (
-                <section className="rounded-xl border border-[var(--border)] bg-[var(--panel)]/60 p-5 space-y-3">
-                  <h2 className="text-xs font-medium uppercase tracking-wider text-slate-400">
+                <section className="rounded-xl border border-[var(--border)] bg-[var(--panel)]/60 p-5 space-y-3 mb-3">
+                  <h2 className="text-xs font-medium uppercase tracking-wider dash-text-muted">
                     Production remediation playbook
                   </h2>
-                  <ol className="list-decimal list-inside space-y-3 text-sm text-slate-300 leading-relaxed">
+                  <ol className="list-decimal list-inside space-y-3 text-sm dash-text-secondary leading-relaxed pl-0.5">
                     {playbook.map((step, i) => (
                       <li key={i}>{step}</li>
                     ))}
@@ -464,7 +518,7 @@ export default function FindingDetailPage() {
                     {
                       header: "API error / gap",
                       render: (row) => (
-                        <span className="text-amber-200/90">
+                        <span className="text-amber-800 dark:text-amber-200/90">
                           {String(row.public_access_block_error ?? "—")}
                         </span>
                       ),
@@ -532,12 +586,20 @@ export default function FindingDetailPage() {
 
               {evObj && <EvidenceAutoTables evidence={evObj} />}
 
-              <section className="rounded-xl border border-[var(--border)] bg-[#0c1117]/60">
-                <details>
-                  <summary className="cursor-pointer p-3 text-sm font-medium text-slate-300 list-none [&::-webkit-details-marker]:hidden">
-                    Raw evidence JSON (advanced)
+              <section className="rounded-xl border border-[var(--border)] dash-surface-nested mt-4">
+                <details className="group">
+                  <summary className="cursor-pointer list-none [&::-webkit-details-marker]:hidden flex flex-wrap items-center justify-between gap-2 px-4 py-3 text-sm font-medium dash-text-primary hover:bg-[var(--panel-hover)]/40 rounded-t-xl transition-colors">
+                    <span className="min-w-0">Raw evidence JSON</span>
+                    <span className="text-xs font-normal dash-text-muted shrink-0 tabular-nums">
+                      <span className="inline group-open:hidden">Show</span>
+                      <span className="hidden group-open:inline">Hide</span>
+                    </span>
                   </summary>
-                  <div className="px-3 pb-3 border-t border-[var(--border)] pt-3">
+                  <div className="px-4 pb-4 border-t border-[var(--border)] pt-3 space-y-2">
+                    <p className="text-xs dash-text-muted leading-relaxed">
+                      Full structured payload returned for this finding. Use for
+                      debugging or automation — prefer tables above for review.
+                    </p>
                     <JsonBlock value={finding.evidence_json} />
                   </div>
                 </details>

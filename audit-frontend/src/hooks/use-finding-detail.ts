@@ -51,6 +51,7 @@ export function useFindingDetail(runId: string, findingId: string) {
 
       setLoading(true);
       setErr(null);
+      setFinding(null);
 
       void (async () => {
         try {
