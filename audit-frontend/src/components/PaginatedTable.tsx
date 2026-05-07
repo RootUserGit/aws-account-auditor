@@ -5,13 +5,15 @@ import type { ReactNode } from "react";
 
 export type TableColumn = {
   header: string;
-  /** Dot path optional later; for now flat keys on row */
   key?: string;
-  /** Custom cell when key isn't enough */
   render?: (row: Record<string, unknown>) => ReactNode;
 };
 
-function cellValue(row: Record<string, unknown>, key: string | undefined, render: TableColumn["render"]) {
+function cellValue(
+  row: Record<string, unknown>,
+  key: string | undefined,
+  render: TableColumn["render"],
+) {
   if (render) return render(row);
   if (!key) return "—";
   const v = row[key];
@@ -26,14 +28,14 @@ export function PaginatedTable({
   rows,
   pageSize = 10,
   emptyMessage = "No rows in this sample.",
-}: {
+}: Readonly<{
   title: string;
   subtitle?: string;
   columns: TableColumn[];
   rows: Record<string, unknown>[];
   pageSize?: number;
   emptyMessage?: string;
-}) {
+}>) {
   const [page, setPage] = useState(0);
   const total = rows.length;
   const pageCount = Math.max(1, Math.ceil(total / pageSize));
@@ -51,12 +53,18 @@ export function PaginatedTable({
 
   return (
     <section className="space-y-3">
-      <div>
-        <h2 className="text-lg font-medium text-white tracking-tight">{title}</h2>
-        {subtitle && <p className="text-xs text-slate-500 mt-1 leading-relaxed">{subtitle}</p>}
+      <div className="space-y-1">
+        <h2 className="text-lg font-medium dash-text-primary tracking-tight">
+          {title}
+        </h2>
+        {subtitle && (
+          <p className="text-xs dash-text-muted mt-0.5 leading-relaxed max-w-[80ch]">
+            {subtitle}
+          </p>
+        )}
       </div>
       {total === 0 ? (
-        <p className="text-sm text-slate-500 border border-dashed border-[var(--border)] rounded-xl p-6 text-center">
+        <p className="text-sm dash-text-muted border border-dashed border-[var(--border)] rounded-xl p-6 text-center">
           {emptyMessage}
         </p>
       ) : (
@@ -64,9 +72,12 @@ export function PaginatedTable({
           <div className="overflow-x-auto rounded-xl border border-[var(--border)] bg-[var(--panel)]/40">
             <table className="min-w-full text-sm">
               <thead>
-                <tr className="border-b border-[var(--border)] text-left text-xs uppercase tracking-wide text-slate-500">
+                <tr className="border-b border-[var(--border)] text-left text-xs uppercase tracking-wide dash-text-muted">
                   {columns.map((c) => (
-                    <th key={c.header} className="p-3 font-medium whitespace-nowrap">
+                    <th
+                      key={c.header}
+                      className="p-3 font-medium whitespace-nowrap align-bottom"
+                    >
                       {c.header}
                     </th>
                   ))}
@@ -74,9 +85,15 @@ export function PaginatedTable({
               </thead>
               <tbody>
                 {pageRows.map((row, ri) => (
-                  <tr key={ri} className="border-t border-[var(--border)]/80 hover:bg-[var(--panel-hover)]/50">
+                  <tr
+                    key={ri}
+                    className="border-t border-[var(--border)]/80 hover:bg-[var(--panel-hover)]/50"
+                  >
                     {columns.map((c) => (
-                      <td key={c.header} className="p-3 text-slate-300 align-top text-xs">
+                      <td
+                        key={c.header}
+                        className="p-3 dash-text-secondary align-top text-xs leading-snug"
+                      >
                         {cellValue(row, c.key, c.render)}
                       </td>
                     ))}
@@ -86,16 +103,17 @@ export function PaginatedTable({
             </table>
           </div>
           {total > pageSize && (
-            <div className="flex flex-wrap items-center justify-between gap-2 text-xs text-slate-500">
+            <div className="flex flex-wrap items-center justify-between gap-2 text-xs dash-text-muted">
               <span>
-                Showing {page * pageSize + 1}–{Math.min((page + 1) * pageSize, total)} of {total}
+                Showing {page * pageSize + 1}–
+                {Math.min((page + 1) * pageSize, total)} of {total}
               </span>
               <div className="flex gap-2">
                 <button
                   type="button"
                   disabled={page <= 0}
                   onClick={() => setPage((p) => Math.max(0, p - 1))}
-                  className="rounded-md border border-[var(--border)] px-3 py-1.5 hover:bg-[var(--panel-hover)] disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="rounded-md border border-[var(--border)] px-3 py-1.5 dash-text-secondary hover:bg-[var(--panel-hover)] disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Previous
                 </button>
@@ -103,7 +121,7 @@ export function PaginatedTable({
                   type="button"
                   disabled={page >= pageCount - 1}
                   onClick={() => setPage((p) => Math.min(pageCount - 1, p + 1))}
-                  className="rounded-md border border-[var(--border)] px-3 py-1.5 hover:bg-[var(--panel-hover)] disabled:opacity-40 disabled:cursor-not-allowed"
+                  className="rounded-md border border-[var(--border)] px-3 py-1.5 dash-text-secondary hover:bg-[var(--panel-hover)] disabled:opacity-40 disabled:cursor-not-allowed"
                 >
                   Next
                 </button>

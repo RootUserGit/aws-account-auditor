@@ -1,6 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+
+@import "@cloudscape-design/global-styles/index.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  --font-family-base-gmnpzl:
+    "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --font-family-heading-ugphat:
+    "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+}
 
 :root {
   --background: #0c1117;
@@ -10,17 +21,196 @@
   --border: #2d3548;
   --accent: #ff9900;
   --accent-muted: #cc7a00;
+
+  --dash-text-primary: #f8fafc;
+  --dash-text-secondary: #cbd5e1;
+  --dash-text-muted: #94a3b8;
+  --dash-text-subtle: #64748b;
+  --dash-text-code: #e2e8f0;
+  --dash-surface-wrap: #0c1117;
+  --dash-surface-card: rgba(20, 26, 34, 0.55);
+  --dash-surface-nested: rgba(12, 17, 23, 0.45);
+  --dash-link: var(--accent);
 }
 
+html.light {
+  --background: #f2f3f3;
+  --foreground: #16191f;
+  --panel: #ffffff;
+  --panel-hover: #eaeded;
+  --border: #d5dbdb;
+  --accent: #ec7211;
+  --accent-muted: #ba5713;
+
+  --dash-text-primary: #16191f;
+  --dash-text-secondary: #414d5c;
+  --dash-text-muted: #687078;
+  --dash-text-subtle: #879596;
+  --dash-text-code: #232f3e;
+  --dash-surface-wrap: #f2f3f3;
+  --dash-surface-card: rgba(255, 255, 255, 0.92);
+  --dash-surface-nested: rgba(242, 243, 243, 0.95);
+  --dash-link: #0972d3;
+}
+
+html,
 body {
-  color: var(--foreground);
-  background: radial-gradient(ellipse 120% 80% at 50% -20%, #1e2836 0%, var(--background) 45%);
-  background-attachment: fixed;
-  font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-family: "Inter", system-ui, sans-serif;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+@layer components {
+  .dash-text-primary {
+    color: var(--dash-text-primary);
+  }
+  .dash-text-secondary {
+    color: var(--dash-text-secondary);
+  }
+  .dash-text-muted {
+    color: var(--dash-text-muted);
+  }
+  .dash-text-subtle {
+    color: var(--dash-text-subtle);
+  }
+  .dash-text-code {
+    color: var(--dash-text-code);
+  }
+  .dash-link {
+    color: var(--dash-link);
+  }
+  .dash-surface-card {
+    background-color: var(--dash-surface-card);
+  }
+  .dash-surface-nested {
+    background-color: var(--dash-surface-nested);
+  }
+
+  .dash-meta-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    line-height: 1.25rem;
+    letter-spacing: 0.02em;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
+    background: color-mix(in srgb, var(--panel) 62%, transparent);
+    color: var(--dash-text-secondary);
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.12);
+    transition:
+      border-color 0.15s ease,
+      background-color 0.15s ease,
+      box-shadow 0.15s ease;
+  }
+
+  html.light .dash-meta-pill {
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.06);
+  }
+
+  .dash-meta-pill:hover {
+    border-color: color-mix(in srgb, var(--border) 82%, var(--dash-text-muted));
+    background: color-mix(in srgb, var(--panel-hover) 48%, transparent);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+  }
+
+  .dash-meta-pill--tinted:hover {
+    filter: brightness(1.07);
+  }
+}
+
+.dashboard-tailwind-surface {
+  border-radius: 4px;
+  padding: 16px;
+}
+
+#audit-app-header.audit-app-header {
+  background: transparent;
+}
+
+html.light #audit-app-header [class*="awsui_top-navigation"] {
+  background-color: #f2f3f3 !important;
+  border-block-end-color: #eaeded !important;
+}
+
+html.light #audit-app-header [class*="awsui_identity-link"] {
+  color: #16191f !important;
+}
+
+html.light #audit-app-header [class*="awsui_title"] {
+  color: #232f3e !important;
+}
+
+html.light [class*="awsui_universal-toolbar"] {
+  background-color: #ffffff !important;
+}
+
+#audit-app-header [class*="awsui_logo"] {
+  max-height: 28px;
+  width: auto;
+  margin-right: 20px !important;
+}
+
+#audit-app-header [class*="awsui_identity"] span[class*="awsui_title"] {
+  display: inline !important;
+  max-width: none !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: nowrap;
+}
+
+.row-actions-dropdown {
+  padding: 2px 4px;
+}
+
+.row-actions-dropdown button {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--dash-text-secondary) !important;
+  background: transparent !important;
+  border: none !important;
+  transition: all 0.15s ease;
+}
+
+.row-actions-dropdown button:hover {
+  background: var(--panel-hover) !important;
+  color: var(--dash-text-primary) !important;
+}
+
+.row-actions-dropdown button:active {
+  transform: scale(0.96);
+}
+
+.row-actions-dropdown button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.awsui-context-menu,
+.awsui-popover-content {
+  background-color: var(--panel) !important;
+  border: 1px solid var(--border) !important;
+  border-radius: 8px !important;
+}
+
+.awsui-context-menu li {
+  padding: 6px 12px !important;
+}
+
+.awsui-context-menu li:hover {
+  background-color: var(--panel-hover) !important;
+}
+
+.awsui-context-menu li span[class*="icon"] {
+  margin-right: 8px !important;
 }
