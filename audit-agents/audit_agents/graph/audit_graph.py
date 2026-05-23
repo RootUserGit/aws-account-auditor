@@ -12,6 +12,7 @@ from botocore.exceptions import ClientError
 from langgraph.graph import END, START, StateGraph
 
 from audit_data_collection.cost import collect_cost, merge_cost_bundle
+from audit_data_collection.cspm_signals import build_cspm_signals
 from audit_data_collection.normalize import merge_evidence
 from audit_data_collection.security import collect_security, merge_security_bundle
 from audit_data_collection.session import default_boto_config, session_from_credentials
@@ -109,6 +110,7 @@ def node_merge(state: AuditState) -> dict[str, Any]:
         return {}
     report_progress({"phase": "merge", "message": "Merging evidence…"})
     merged = merge_evidence(state.get("security_bundle") or {}, state.get("cost_bundle") or {})
+    merged["cspm_signals"] = build_cspm_signals(merged, collector_errors=merged.get("_errors") or [])
     return {"merged_evidence": merged}
 
 

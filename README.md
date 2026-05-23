@@ -20,7 +20,7 @@ Stack overview (services, data stores, and how traffic flows through the platfor
 | `audit-llm/` | Stub LLM HTTP service |
 | `audit-frontend/` | Next.js dashboard |
 | `policies/` | Customer auditor IAM policy template |
-| `rule_packs/v1/` | YAML rule definitions |
+| `rule_packs/v1/` | YAML rule definitions (~150 checks: per-rule files + `aud001_cspm_trend_pack.yaml` CSPM bundle) |
 
 ## Quick start
 

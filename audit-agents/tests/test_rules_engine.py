@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from audit_agents.rules_engine import EVALUATORS, aggregate_counts, evaluate_all
+from audit_agents.rules_engine import EVALUATORS, aggregate_counts, evaluate_all, load_rule_definitions
 
 
 @pytest.fixture
@@ -71,6 +71,20 @@ def test_lambda_function_url_fails_without_iam() -> None:
     )
     assert status == "failed"
     assert len(ev.get("function_urls_without_iam_auth") or []) == 1
+
+
+def test_rule_pack_loads_at_least_150(pack_dir: Path) -> None:
+    rules = load_rule_definitions(pack_dir)
+    assert len(rules) >= 150
+
+
+def test_cspm_signal_evaluator_uses_merged_signals() -> None:
+    ev = {"cspm_signals": {"IAM_CREDENTIAL_REPORT_MISSING": {"status": "passed", "evidence": {"ok": True}}}}
+    status, ev_out, _, _ = EVALUATORS["cspm_signal"](ev, {"cspm_signal": "IAM_CREDENTIAL_REPORT_MISSING"})
+    assert status == "passed"
+    assert ev_out.get("ok") is True
+    st2, _, _, _ = EVALUATORS["cspm_signal"](ev, {"cspm_signal": "NOT_A_REAL_SIGNAL_KEY"})
+    assert st2 == "unknown"
 
 
 def test_aggregate_counts(pack_dir: Path) -> None:

@@ -1,0 +1,573 @@
+- id: SEC065_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: ALB COUNT COST REVIEW — CSPM / Trend-style control (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: ALB_COUNT_COST_REVIEW
+- id: SEC066_CSPM_TREND
+  pillar: security
+  severity: high
+  war_theme: SEC01
+  description: CLOUDTRAIL CLOUDWATCH LOGS NOT CONFIGURED — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: CLOUDTRAIL_CLOUDWATCH_LOGS_NOT_CONFIGURED
+- id: SEC067_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: CLOUDTRAIL NOT MULTI REGION — CSPM / Trend-style control (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: CLOUDTRAIL_NOT_MULTI_REGION
+- id: SEC068_CSPM_TREND
+  pillar: security
+  severity: high
+  war_theme: SEC01
+  description: CLOUDTRAIL NO ACTIVE LOGGING TRAIL — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: CLOUDTRAIL_NO_ACTIVE_LOGGING_TRAIL
+- id: SEC069_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: CLOUDWATCH METRIC ALARMS ABSENT — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: CLOUDWATCH_METRIC_ALARMS_ABSENT
+- id: SEC070_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: CONFIG CONFIGURATION RECORDER NOT RECORDING — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: CONFIG_CONFIGURATION_RECORDER_NOT_RECORDING
+- id: SEC071_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: DYNAMODB POINT IN TIME RECOVERY DISABLED — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: DYNAMODB_POINT_IN_TIME_RECOVERY_DISABLED
+- id: SEC072_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: EBS GP2 IN USE COST REVIEW — CSPM / Trend-style control (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: EBS_GP2_IN_USE_COST_REVIEW
+- id: SEC073_CSPM_TREND
+  pillar: security
+  severity: high
+  war_theme: SEC01
+  description: EBS IN USE VOLUME UNENCRYPTED — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: EBS_IN_USE_VOLUME_UNENCRYPTED
+- id: SEC074_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: EC2 DEFAULT SECURITY GROUP OPEN INGRESS REVIEW — CSPM / Trend-style
+    control (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: EC2_DEFAULT_SECURITY_GROUP_OPEN_INGRESS_REVIEW
+- id: SEC075_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: EC2 DEFAULT VPC PRESENT — CSPM / Trend-style control (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: EC2_DEFAULT_VPC_PRESENT
+- id: SEC076_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: EC2 DETAILED MONITORING DISABLED RUNNING — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: EC2_DETAILED_MONITORING_DISABLED_RUNNING
+- id: SEC077_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: EC2 IMDSV2 NOT REQUIRED INSTANCES — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: EC2_IMDSV2_NOT_REQUIRED_INSTANCES
+- id: SEC078_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: EC2 INSTANCE INVENTORY COUNT HIGH — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: EC2_INSTANCE_INVENTORY_COUNT_HIGH
+- id: SEC079_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: EC2 LAUNCH WIZARD SECURITY GROUPS PRESENT — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: EC2_LAUNCH_WIZARD_SECURITY_GROUPS_PRESENT
+- id: SEC080_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: EC2 MISSING INSTANCE PROFILE WHEN RUNNING — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: EC2_MISSING_INSTANCE_PROFILE_WHEN_RUNNING
+- id: SEC081_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: EC2 MULTI ENI INSTANCES REVIEW — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: EC2_MULTI_ENI_INSTANCES_REVIEW
+- id: SEC082_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: EC2 OWNED AMI AGE OVER 180 DAYS — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: EC2_OWNED_AMI_AGE_OVER_180_DAYS
+- id: SEC083_CSPM_TREND
+  pillar: security
+  severity: high
+  war_theme: SEC01
+  description: EC2 OWNED AMI PUBLIC LAUNCH PERMISSION — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: EC2_OWNED_AMI_PUBLIC_LAUNCH_PERMISSION
+- id: SEC084_CSPM_TREND
+  pillar: security
+  severity: high
+  war_theme: SEC01
+  description: EC2 PUBLIC IPV4 ON INSTANCES — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: EC2_PUBLIC_IPV4_ON_INSTANCES
+- id: SEC085_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: EC2 RUNNING INSTANCE WITHOUT KEY NAME REVIEW — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: EC2_RUNNING_INSTANCE_WITHOUT_KEY_NAME_REVIEW
+- id: SEC086_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: EC2 SCHEDULED MAINTENANCE EVENTS PRESENT — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: EC2_SCHEDULED_MAINTENANCE_EVENTS_PRESENT
+- id: SEC087_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: EC2 SECURITY GROUP COUNT PER REGION HIGH — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: EC2_SECURITY_GROUP_COUNT_PER_REGION_HIGH
+- id: SEC088_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: EC2 SECURITY GROUP RULE BLOAT PRESENT — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: EC2_SECURITY_GROUP_RULE_BLOAT_PRESENT
+- id: SEC089_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: EC2 SENSITIVE INGRESS WORLD WIDE COUNT HIGH — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: EC2_SENSITIVE_INGRESS_WORLD_WIDE_COUNT_HIGH
+- id: SEC090_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: EC2 TERMINATION PROTECTION DISABLED RUNNING — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: EC2_TERMINATION_PROTECTION_DISABLED_RUNNING
+- id: SEC091_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: ECS CONTAINER INSIGHTS DISABLED ANY — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: ECS_CONTAINER_INSIGHTS_DISABLED_ANY
+- id: SEC092_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: EFS ENCRYPTION AT REST DISABLED — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: EFS_ENCRYPTION_AT_REST_DISABLED
+- id: SEC093_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: ELASTICACHE ENCRYPTION AT REST DISABLED — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: ELASTICACHE_ENCRYPTION_AT_REST_DISABLED
+- id: SEC094_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: GUARDDUTY COVERAGE LT HALF SAMPLED REGIONS — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: GUARDDUTY_COVERAGE_LT_HALF_SAMPLED_REGIONS
+- id: SEC095_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: IAM ACCESS KEYS BEYOND 90 DAYS ROTATION — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: IAM_ACCESS_KEYS_BEYOND_90_DAYS_ROTATION
+- id: SEC096_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: IAM ACCOUNT ROLE COUNT HIGH — CSPM / Trend-style control (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: IAM_ACCOUNT_ROLE_COUNT_HIGH
+- id: SEC097_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: IAM ACCOUNT USER COUNT HIGH — CSPM / Trend-style control (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: IAM_ACCOUNT_USER_COUNT_HIGH
+- id: SEC098_CSPM_TREND
+  pillar: security
+  severity: high
+  war_theme: SEC01
+  description: IAM ATTACHED CUSTOMER POLICY WILDCARD ACTION — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: IAM_ATTACHED_CUSTOMER_POLICY_WILDCARD_ACTION
+- id: SEC099_CSPM_TREND
+  pillar: security
+  severity: high
+  war_theme: SEC01
+  description: IAM CREDENTIAL REPORT MISSING — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: IAM_CREDENTIAL_REPORT_MISSING
+- id: SEC100_CSPM_TREND
+  pillar: security
+  severity: high
+  war_theme: SEC01
+  description: IAM INLINE POLICY WILDCARD ACTION — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: IAM_INLINE_POLICY_WILDCARD_ACTION
+- id: SEC101_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: IAM MULTI ACTIVE ACCESS KEYS PRESENT — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: IAM_MULTI_ACTIVE_ACCESS_KEYS_PRESENT
+- id: SEC102_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: IAM PASSWORD AND PROGRAMMATIC BOTH ENABLED — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: IAM_PASSWORD_AND_PROGRAMMATIC_BOTH_ENABLED
+- id: SEC103_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: IAM SERVER CERTIFICATE EXPIRES 30D — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: IAM_SERVER_CERTIFICATE_EXPIRES_30D
+- id: SEC104_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: IAM STALE CONSOLE PASSWORD 90D — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: IAM_STALE_CONSOLE_PASSWORD_90D
+- id: SEC105_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: IAM USER INLINE POLICIES PRESENT — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: IAM_USER_INLINE_POLICIES_PRESENT
+- id: SEC106_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: KMS CUSTOMER KEYS CHECKED LT THREE — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: KMS_CUSTOMER_KEYS_CHECKED_LT_THREE
+- id: SEC107_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: LAMBDA DEPRECATED RUNTIME INVENTORY — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: LAMBDA_DEPRECATED_RUNTIME_INVENTORY
+- id: SEC108_CSPM_TREND
+  pillar: security
+  severity: high
+  war_theme: SEC01
+  description: LAMBDA FUNCTION URL PUBLIC AUTH NONE — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: LAMBDA_FUNCTION_URL_PUBLIC_AUTH_NONE
+- id: SEC109_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: LAMBDA HIGH ENV VARS WITHOUT CMEK — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: LAMBDA_HIGH_ENV_VARS_WITHOUT_CMEK
+- id: SEC110_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: LAMBDA RESERVED CONCURRENCY SET REVIEW — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: LAMBDA_RESERVED_CONCURRENCY_SET_REVIEW
+- id: SEC111_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: NAT GATEWAY COUNT COST REVIEW — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: NAT_GATEWAY_COUNT_COST_REVIEW
+- id: SEC112_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: RDS AUTO MINOR VERSION UPGRADE DISABLED — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: RDS_AUTO_MINOR_VERSION_UPGRADE_DISABLED
+- id: SEC113_CSPM_TREND
+  pillar: security
+  severity: high
+  war_theme: SEC01
+  description: RDS BACKUP RETENTION LT 7 — CSPM / Trend-style control (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: RDS_BACKUP_RETENTION_LT_7
+- id: SEC114_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: RDS DELETION PROTECTION DISABLED — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: RDS_DELETION_PROTECTION_DISABLED
+- id: SEC115_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: RDS MULTI AZ DISABLED — CSPM / Trend-style control (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: RDS_MULTI_AZ_DISABLED
+- id: SEC116_CSPM_TREND
+  pillar: security
+  severity: high
+  war_theme: SEC01
+  description: RDS PUBLIC ACCESSIBILITY ANY — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: RDS_PUBLIC_ACCESSIBILITY_ANY
+- id: SEC117_CSPM_TREND
+  pillar: security
+  severity: high
+  war_theme: SEC01
+  description: RDS STORAGE UNENCRYPTED ANY — CSPM / Trend-style control (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: RDS_STORAGE_UNENCRYPTED_ANY
+- id: SEC118_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: S3 BUCKET COUNT HIGH COST REVIEW — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: S3_BUCKET_COUNT_HIGH_COST_REVIEW
+- id: SEC119_CSPM_TREND
+  pillar: security
+  severity: high
+  war_theme: SEC01
+  description: S3 BUCKET PUBLIC ACL OR POLICY ALLOWED — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: S3_BUCKET_PUBLIC_ACL_OR_POLICY_ALLOWED
+- id: SEC120_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: S3 BUCKET SERVER ACCESS LOGGING DISABLED — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: S3_BUCKET_SERVER_ACCESS_LOGGING_DISABLED
+- id: SEC121_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: S3 DEFAULT ENCRYPTION DISABLED ANY BUCKET — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: S3_DEFAULT_ENCRYPTION_DISABLED_ANY_BUCKET
+- id: SEC122_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: S3 DENY INSECURE TRANSPORT NOT ENFORCED — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: S3_DENY_INSECURE_TRANSPORT_NOT_ENFORCED
+- id: SEC123_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: S3 LIFECYCLE NOT CONFIGURED ANY BUCKET — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: S3_LIFECYCLE_NOT_CONFIGURED_ANY_BUCKET
+- id: SEC124_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: S3 VERSIONING NOT ENABLED ALL BUCKETS — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: S3_VERSIONING_NOT_ENABLED_ALL_BUCKETS
+- id: SEC125_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: SECRETS MANAGER ROTATION DISABLED COUNT — CSPM / Trend-style control
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: SECRETS_MANAGER_ROTATION_DISABLED_COUNT
+- id: SEC126_CSPM_TREND
+  pillar: security
+  severity: high
+  war_theme: SEC01
+  description: SECURITY HUB DISABLED — CSPM / Trend-style control (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: SECURITY_HUB_DISABLED
+- id: SEC127_CSPM_TREND
+  pillar: security
+  severity: medium
+  war_theme: SEC01
+  description: SSM COVERAGE LOW WHEN EC2 PRESENT — CSPM / Trend-style control (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: SSM_COVERAGE_LOW_WHEN_EC2_PRESENT
+- id: SEC128_CSPM_TREND
+  pillar: security
+  severity: high
+  war_theme: SEC01
+  description: VPC FLOW LOGS DISABLED — CSPM / Trend-style control (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: VPC_FLOW_LOGS_DISABLED
+- id: COST017_CSPM_TREND
+  pillar: cost
+  severity: medium
+  war_theme: COST01
+  description: COST BUDGETS NOT CONFIGURED — CSPM / Trend-style cost signal (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: COST_BUDGETS_NOT_CONFIGURED
+- id: COST018_CSPM_TREND
+  pillar: cost
+  severity: medium
+  war_theme: COST01
+  description: COST LAMBDA PROVISIONED CONCURRENCY UNITS PRESENT — CSPM / Trend-style
+    cost signal (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: COST_LAMBDA_PROVISIONED_CONCURRENCY_UNITS_PRESENT
+- id: COST019_CSPM_TREND
+  pillar: cost
+  severity: medium
+  war_theme: COST01
+  description: COST RESERVED INSTANCES EXPIRING WINDOW — CSPM / Trend-style cost signal
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: COST_RESERVED_INSTANCES_EXPIRING_WINDOW
+- id: COST020_CSPM_TREND
+  pillar: cost
+  severity: medium
+  war_theme: COST01
+  description: COST STOPPED EC2 COUNT HIGH — CSPM / Trend-style cost signal (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: COST_STOPPED_EC2_COUNT_HIGH
+- id: COST021_CSPM_TREND
+  pillar: cost
+  severity: low
+  war_theme: COST01
+  description: COST TOP TWO SERVICES DOMINATE SPEND — CSPM / Trend-style cost signal
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: COST_TOP_TWO_SERVICES_DOMINATE_SPEND
+- id: COST022_CSPM_TREND
+  pillar: cost
+  severity: low
+  war_theme: COST01
+  description: COST TRUSTED ADVISOR CHECKS UNAVAILABLE — CSPM / Trend-style cost signal
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: COST_TRUSTED_ADVISOR_CHECKS_UNAVAILABLE
+- id: COST023_CSPM_TREND
+  pillar: cost
+  severity: medium
+  war_theme: COST01
+  description: COST UNASSOCIATED EIP PRESENT — CSPM / Trend-style cost signal (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: COST_UNASSOCIATED_EIP_PRESENT
+- id: COST024_CSPM_TREND
+  pillar: cost
+  severity: medium
+  war_theme: COST01
+  description: COST UNATTACHED EBS GB HIGH — CSPM / Trend-style cost signal (AUD-001
+    expansion).
+  evaluator: cspm_signal
+  cspm_signal: COST_UNATTACHED_EBS_GB_HIGH
+- id: COST025_CSPM_TREND
+  pillar: cost
+  severity: medium
+  war_theme: COST01
+  description: COST UNUSED KEYPAIR REGION PRESENT — CSPM / Trend-style cost signal
+    (AUD-001 expansion).
+  evaluator: cspm_signal
+  cspm_signal: COST_UNUSED_KEYPAIR_REGION_PRESENT
