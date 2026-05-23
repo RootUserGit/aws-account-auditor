@@ -97,6 +97,8 @@ class Finding(Base):
     severity: Mapped[str] = mapped_column(String(32), nullable=False)
     status: Mapped[str] = mapped_column(String(32), nullable=False)
     war_theme: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    #: CIS AWS Foundations Benchmark v1.5 control id when mapped (e.g. "5.2", "2.1.1").
+    cis_control: Mapped[str | None] = mapped_column(String(32), nullable=True)
     resource_id: Mapped[str | None] = mapped_column(String(1024), nullable=True)
     evidence_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     remediation_hint: Mapped[str | None] = mapped_column(Text, nullable=True)

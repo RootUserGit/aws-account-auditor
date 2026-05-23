@@ -18,6 +18,7 @@ import { useTheme } from "next-themes";
 
 import {
   DashboardActiveRunHeader,
+  DashboardCisComplianceCard,
   DashboardErrorBanner,
   DashboardFindingsFilterPanel,
   DashboardGroupedFindings,
@@ -776,6 +777,10 @@ function DashboardContent() {
                   <DashboardFindingsFilterPanel
                     failedOnly={failedOnly}
                     onToggle={() => setFailedOnly((v) => !v)}
+                  />
+
+                  <DashboardCisComplianceCard
+                    cis={summary?.cis_aws_foundations_v15}
                   />
 
                   {summary ? (

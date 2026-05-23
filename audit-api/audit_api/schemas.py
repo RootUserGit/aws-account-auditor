@@ -71,6 +71,7 @@ class FindingOut(BaseModel):
     severity: str
     status: str
     war_theme: str | None
+    cis_control: str | None = None
     resource_id: str | None
     # JSON column may be object or array (legacy rows); rules now normalize to dict
     evidence_json: dict[str, Any] | list[Any] | None = None

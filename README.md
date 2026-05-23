@@ -124,7 +124,9 @@ cd audit-api
 uvicorn audit_api.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-The API runs **`init_db()`** on startup, so you do not need a separate migration step for the MVP schema.
+The API runs **`init_db()`** on startup, so you do not need a separate migration step for the MVP schema on a **fresh** database volume.
+
+**Existing Postgres volumes:** when the schema gains columns (for example **`findings.cis_control`** for CIS score / AUD-002), apply the SQL under **`docs/sql/`** once (e.g. `aud002_add_findings_cis_control.sql`) or recreate the volume for local dev.
 
 ### Step 5 — Start the Next.js dev server
 

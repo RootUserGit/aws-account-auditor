@@ -2,5 +2,7 @@ id: SEC014_SG_SSH_OPEN_INTERNET
 pillar: security
 severity: critical
 war_theme: SEC05
+# Optional CIS mapping (defaults also come from audit_agents/cis_controls_v15.py).
+cis_control: "5.2"
 description: Security groups must not expose SSH to the entire Internet.
 evaluator: ec2_ssh_open_to_world

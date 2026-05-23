@@ -19,6 +19,8 @@ export type {
 } from "./DashboardRunOutcomeBanners";
 export { DashboardFindingsFilterPanel } from "./DashboardFindingsFilterPanel";
 export type { DashboardFindingsFilterPanelProps } from "./DashboardFindingsFilterPanel";
+export { DashboardCisComplianceCard } from "./DashboardCisComplianceCard";
+export type { DashboardCisComplianceCardProps } from "./DashboardCisComplianceCard";
 export { DashboardRunSummaryCards } from "./DashboardRunSummaryCards";
 export type { DashboardRunSummaryCardsProps } from "./DashboardRunSummaryCards";
 export { DashboardSeverityStatusCharts } from "./DashboardSeverityStatusCharts";

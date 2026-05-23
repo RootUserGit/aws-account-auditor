@@ -208,6 +208,7 @@ def process_audit_run(run_id_str: str) -> None:
                         severity=row["severity"],
                         status=row["status"],
                         war_theme=row.get("war_theme"),
+                        cis_control=row.get("cis_control"),
                         resource_id=row.get("resource_id"),
                         evidence_json=json_for_db(row.get("evidence_json")),
                         remediation_hint=row.get("remediation_hint"),

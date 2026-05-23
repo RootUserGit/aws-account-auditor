@@ -10,6 +10,8 @@ from typing import Any, Callable, Dict, Optional, Tuple
 
 import yaml
 
+from audit_agents.cis_controls_v15 import resolve_cis_control
+
 logger = logging.getLogger(__name__)
 
 # End-of-life / deprecated Lambda runtimes (expand over time).
@@ -1607,6 +1609,7 @@ def evaluate_all(
                     "pillar": rule["pillar"],
                     "severity": rule["severity"],
                     "war_theme": rule.get("war_theme"),
+                    "cis_control": resolve_cis_control(rule),
                     "status": "unknown",
                     "resource_id": None,
                     "evidence_json": {"error": f"unknown_evaluator:{ev_name}"},
@@ -1622,6 +1625,7 @@ def evaluate_all(
                 "pillar": rule["pillar"],
                 "severity": rule["severity"],
                 "war_theme": rule.get("war_theme"),
+                "cis_control": resolve_cis_control(rule),
                 "status": status,
                 "resource_id": resource_id,
                 "evidence_json": ev_subset,
