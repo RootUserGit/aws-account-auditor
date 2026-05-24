@@ -1,8 +1,8 @@
 import { apiClient } from "@/lib/api/axios-client";
 import { apiEndpoints } from "@/lib/api/api-endpoints";
 
-export function fetchRunsList(skip: number, limit: number) {
-  return apiClient.get<unknown>(apiEndpoints.runsList(skip, limit));
+export function fetchRunsList(skip: number, limit: number, accountId?: string) {
+  return apiClient.get<unknown>(apiEndpoints.runsList(skip, limit, accountId));
 }
 
 export function fetchRun(runId: string) {

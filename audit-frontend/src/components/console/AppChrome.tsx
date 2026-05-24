@@ -11,7 +11,7 @@ import TopNavigation from "@cloudscape-design/components/top-navigation";
 import Toggle from "@cloudscape-design/components/toggle";
 import { usePathname, useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 const AWS_LOGO =
   "https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg";
@@ -41,6 +41,14 @@ export function AppChrome({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const { setTheme, resolvedTheme } = useTheme();
   const [navOpen, setNavOpen] = useState(true);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    if (!window.matchMedia("(max-width: 1023px)").matches) return;
+    queueMicrotask(() => {
+      setNavOpen(false);
+    });
+  }, []);
 
   const activeNavHref = useMemo(() => {
     if (pathname === "/") return "/";
@@ -73,7 +81,7 @@ export function AppChrome({ children }: { children: React.ReactNode }) {
       <Box padding={{ horizontal: "l", vertical: "m" }}>
         <FormField
           label="Color scheme"
-          description="Use a light or dark console theme. This setting is saved in your browser."
+          description="Saved in this browser. Applies to the whole console."
           stretch
         >
           <Toggle
@@ -91,7 +99,7 @@ export function AppChrome({ children }: { children: React.ReactNode }) {
   );
 
   return (
-    <div className="h-[100dvh] flex flex-col">
+    <div className="flex h-[100dvh] min-h-0 min-w-0 flex-col overflow-x-hidden">
       <div
         id="audit-app-header"
         className="audit-app-header fixed top-0 left-0 right-0 z-[1000]"
@@ -121,13 +129,14 @@ export function AppChrome({ children }: { children: React.ReactNode }) {
                 variant="icon"
                 iconName="settings"
                 ariaLabel="Open preferences"
+                formAction="none"
               />
             </Popover>
           </div>
         </div>
       </div>
 
-      <div className="flex-1 min-h-0" style={{ paddingTop: HEADER_HEIGHT }}>
+      <div className="flex min-h-0 min-w-0 flex-1 flex-col" style={{ paddingTop: HEADER_HEIGHT }}>
         <AppLayout
           headerSelector="#audit-app-header"
           navigation={
@@ -140,7 +149,11 @@ export function AppChrome({ children }: { children: React.ReactNode }) {
           navigationOpen={navOpen}
           onNavigationChange={({ detail }) => setNavOpen(detail.open)}
           toolsHide
-          content={<div className="h-full overflow-auto p-4">{children}</div>}
+          content={
+            <div className="audit-console-main-scroll min-h-0 min-w-0 flex-1 overflow-y-auto overflow-x-hidden px-3 py-3 sm:px-4 sm:py-4 md:px-6 md:py-5">
+              {children}
+            </div>
+          }
           ariaLabels={{
             navigation: "Side navigation",
             navigationClose: "Close side navigation",

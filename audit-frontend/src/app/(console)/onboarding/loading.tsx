@@ -1,5 +1,5 @@
-import { OnboardingPageSkeleton } from "@/components/skeletons";
+import { ConsoleRouteLoading } from "@/components/console/ConsoleRouteLoading";
 
 export default function OnboardingLoading() {
-  return <OnboardingPageSkeleton />;
+  return <ConsoleRouteLoading title="Loading onboarding…" />;
 }

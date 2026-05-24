@@ -1,6 +1,10 @@
 export type Account = {
   id: string;
   account_id: string;
+  /** Friendly label from onboarding (defaults to account_id for legacy rows). */
+  display_name: string;
+  /** Free-form environment tag (e.g. prod, staging); blank onboarded rows use `other`. */
+  environment: string;
   role_arn: string;
   status: string;
   last_verify_error_code?: string | null;

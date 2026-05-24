@@ -5,10 +5,20 @@ export type RegisterAccountBody = {
   account_id: string;
   role_arn: string;
   external_id: string;
+  display_name: string;
+  environment: string;
 };
 
 export function listAccounts() {
   return apiClient.get<unknown>(apiEndpoints.accounts());
+}
+
+export function listEnvironmentTags() {
+  return apiClient.get<unknown>(apiEndpoints.accountEnvironmentTags());
+}
+
+export function getAccount(accountRowUuid: string) {
+  return apiClient.get<unknown>(apiEndpoints.accountById(accountRowUuid));
 }
 
 export function registerAccount(body: RegisterAccountBody) {

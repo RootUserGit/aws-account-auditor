@@ -50,6 +50,10 @@ class AwsAccount(Base):
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     org_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=False)
     account_id: Mapped[str] = mapped_column(String(12), nullable=False)
+    #: Human-friendly label in the UI (e.g. "Prod payments").
+    display_name: Mapped[str] = mapped_column(String(255), nullable=False, default="")
+    #: Free-form environment tag for filtering (e.g. prod, staging, UAT — not AWS data).
+    environment: Mapped[str] = mapped_column(String(128), nullable=False, default="other")
     role_arn: Mapped[str] = mapped_column(String(512), nullable=False)
     external_id: Mapped[str] = mapped_column(String(256), nullable=False)
     status: Mapped[str] = mapped_column(String(32), default=AwsAccountStatus.pending.value)

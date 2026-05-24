@@ -1,5 +1,7 @@
-export { DashboardAccountsTable } from "./DashboardAccountsTable";
-export type { DashboardAccountsTableProps } from "./DashboardAccountsTable";
+export { DashboardAccountsCards } from "./DashboardAccountsCards";
+export type { DashboardAccountsCardsProps } from "./DashboardAccountsCards";
+export { DashboardAccountsSummary } from "./DashboardAccountsSummary";
+export type { DashboardAccountsSummaryProps } from "./DashboardAccountsSummary";
 export { DashboardScanHistoryTable } from "./DashboardScanHistoryTable";
 export type { DashboardScanHistoryTableProps } from "./DashboardScanHistoryTable";
 export { DashboardErrorBanner } from "./DashboardErrorBanner";

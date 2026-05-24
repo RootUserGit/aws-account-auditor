@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap");
 
 @import "@cloudscape-design/global-styles/index.css";
 
@@ -8,54 +8,70 @@
 
 body {
   --font-family-base-gmnpzl:
-    "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    "Open Sans", "Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif;
   --font-family-heading-ugphat:
-    "Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+    "Open Sans", "Amazon Ember", "Helvetica Neue", Roboto, Arial, sans-serif;
 }
 
 :root {
-  --background: #0c1117;
-  --foreground: #e8eaef;
-  --panel: #141a22;
-  --panel-hover: #1a222d;
-  --border: #2d3548;
+  /* Dark: AWS console–adjacent (squid ink + panels) */
+  --background: #0f172a;
+  --foreground: #d5dbdb;
+  --panel: #1e293b;
+  --panel-hover: #273549;
+  --border: #414d5c;
   --accent: #ff9900;
-  --accent-muted: #cc7a00;
+  --accent-muted: #ec7211;
 
-  --dash-text-primary: #f8fafc;
-  --dash-text-secondary: #cbd5e1;
-  --dash-text-muted: #94a3b8;
-  --dash-text-subtle: #64748b;
-  --dash-text-code: #e2e8f0;
-  --dash-surface-wrap: #0c1117;
-  --dash-surface-card: rgba(20, 26, 34, 0.55);
-  --dash-surface-nested: rgba(12, 17, 23, 0.45);
-  --dash-link: var(--accent);
+  --dash-text-primary: #fafafa;
+  --dash-text-secondary: #d5dbdb;
+  --dash-text-muted: #aab7b8;
+  --dash-text-subtle: #879596;
+  --dash-text-code: #eaeded;
+  --dash-surface-wrap: #0f172a;
+  --dash-surface-card: #1e293b;
+  --dash-surface-nested: #161f2d;
+  --dash-link: #539fe5;
 }
 
 html.light {
+  /* Light: AWS console content chrome */
   --background: #f2f3f3;
   --foreground: #16191f;
   --panel: #ffffff;
-  --panel-hover: #eaeded;
+  --panel-hover: #fafafa;
   --border: #d5dbdb;
   --accent: #ec7211;
   --accent-muted: #ba5713;
 
   --dash-text-primary: #16191f;
-  --dash-text-secondary: #414d5c;
+  --dash-text-secondary: #545b64;
   --dash-text-muted: #687078;
   --dash-text-subtle: #879596;
   --dash-text-code: #232f3e;
   --dash-surface-wrap: #f2f3f3;
-  --dash-surface-card: rgba(255, 255, 255, 0.92);
-  --dash-surface-nested: rgba(242, 243, 243, 0.95);
+  --dash-surface-card: #ffffff;
+  --dash-surface-nested: #fafafa;
   --dash-link: #0972d3;
 }
 
 html,
 body {
-  font-family: "Inter", system-ui, sans-serif;
+  font-family:
+    "Open Sans",
+    "Amazon Ember",
+    "Helvetica Neue",
+    Roboto,
+    Arial,
+    sans-serif;
+}
+
+html.dark body {
+  background-color: #0f172a;
+}
+
+html.light body {
+  background-color: #f2f3f3;
 }
 
 @layer utilities {
@@ -127,7 +143,19 @@ body {
 
 .dashboard-tailwind-surface {
   border-radius: 4px;
-  padding: 16px;
+  padding: 0.75rem;
+}
+
+@media (min-width: 640px) {
+  .dashboard-tailwind-surface {
+    padding: 1rem;
+  }
+}
+
+/* Main app scroll: single vertical scroller; wheel works over Cloudscape containers */
+.audit-console-main-scroll {
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: auto;
 }
 
 #audit-app-header.audit-app-header {
@@ -213,4 +241,58 @@ html.light [class*="awsui_universal-toolbar"] {
 
 .awsui-context-menu li span[class*="icon"] {
   margin-right: 8px !important;
+}
+
+/* -------------------------------------------------------------------------- */
+/* AWS Management Console–style tuning (Cloudscape + app chrome)              */
+/* -------------------------------------------------------------------------- */
+
+html.dark #audit-app-header [class*="awsui_top-navigation"] {
+  background-color: #000000 !important;
+  border-block-end: 1px solid #232f3e !important;
+}
+
+html.dark #audit-app-header [class*="awsui_identity-link"],
+html.dark #audit-app-header [class*="awsui_title"] {
+  color: #fafafa !important;
+}
+
+html.dark [class*="awsui_app-layout__navigation"] {
+  background-color: #232f3e !important;
+  border-inline-end-color: #0f172a !important;
+}
+
+html.dark [class*="awsui_app-layout__content"] {
+  background-color: #0f172a !important;
+}
+
+html.dark [class*="awsui_container"] [class*="awsui_header"] {
+  color: #fafafa;
+}
+
+html.dark button[class*="awsui_variant-primary"] {
+  background-color: #ff9900 !important;
+  border-color: #e88700 !important;
+  color: #16191f !important;
+  font-weight: 600;
+}
+
+html.dark button[class*="awsui_variant-primary"]:hover {
+  background-color: #ec7211 !important;
+  border-color: #cc5f21 !important;
+}
+
+html.dark button[class*="awsui_variant-inline-link"] {
+  color: #539fe5 !important;
+}
+
+html.light button[class*="awsui_variant-primary"] {
+  background-color: #ec7211 !important;
+  border-color: #ba5918 !important;
+  color: #ffffff !important;
+  font-weight: 600;
+}
+
+html.light button[class*="awsui_variant-primary"]:hover {
+  background-color: #d65a0c !important;
 }

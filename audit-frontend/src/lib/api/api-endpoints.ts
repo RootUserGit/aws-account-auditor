@@ -1,14 +1,23 @@
 export const apiEndpoints = {
   accounts: () => "/api/backend/accounts",
 
+  accountEnvironmentTags: () =>
+    "/api/backend/accounts/meta/environment-tags",
+
   accountById: (accountRowUuid: string) =>
     `/api/backend/accounts/${encodeURIComponent(accountRowUuid)}`,
 
   accountVerify: (accountRowUuid: string) =>
     `/api/backend/accounts/${encodeURIComponent(accountRowUuid)}/verify`,
 
-  runsList: (skip: number, limit: number) =>
-    `/api/backend/runs?skip=${skip}&limit=${limit}`,
+  runsList: (skip: number, limit: number, accountId?: string) => {
+    const q = new URLSearchParams({
+      skip: String(skip),
+      limit: String(limit),
+    });
+    if (accountId) q.set("account_id", accountId);
+    return `/api/backend/runs?${q}`;
+  },
 
   run: (runId: string) => `/api/backend/runs/${encodeURIComponent(runId)}`,
 

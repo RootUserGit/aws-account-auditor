@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session
 
 from audit_api.deps import get_db, verify_api_key
 from audit_api.run_list import audit_run_to_list_item
-from audit_api.schemas import AwsAccountCreate, AwsAccountOut
+from audit_api.schemas import AwsAccountCreate, AwsAccountOut, AwsAccountUpdate
 from audit_api.services.permission_precheck import precheck_failure_http_detail, run_permission_precheck
 from audit_api.services.sts import verify_assume_role
 from audit_core.models import Artifact, AuditRun, AuditRunStatus, AwsAccount, AwsAccountStatus, Finding, Organization
@@ -45,6 +45,8 @@ def create_account(
     acc = AwsAccount(
         org_id=org.id,
         account_id=body.account_id,
+        display_name=body.display_name,
+        environment=body.environment,
         role_arn=body.role_arn,
         external_id=body.external_id,
         status=AwsAccountStatus.pending.value,
@@ -62,6 +64,44 @@ def list_accounts(
 ) -> list[AwsAccount]:
     org = _default_org(db)
     return db.query(AwsAccount).filter(AwsAccount.org_id == org.id).all()
+
+
+@router.get("/meta/environment-tags", response_model=dict[str, list[str]])
+def list_environment_tags(
+    db: Session = Depends(get_db),
+    _: None = Depends(verify_api_key),
+) -> dict[str, list[str]]:
+    """Distinct environment tags for this org (one canonical spelling per case-insensitive key)."""
+    org = _default_org(db)
+    rows = (
+        db.query(AwsAccount.environment)
+        .filter(AwsAccount.org_id == org.id)
+        .filter(AwsAccount.environment.isnot(None))
+        .all()
+    )
+    by_lower: dict[str, str] = {}
+    for (raw,) in rows:
+        if not raw or not str(raw).strip():
+            continue
+        s = str(raw).strip()
+        k = s.lower()
+        if k not in by_lower:
+            by_lower[k] = s
+    tags = sorted(by_lower.values(), key=lambda x: x.lower())
+    return {"tags": tags}
+
+
+@router.get("/{account_id}", response_model=AwsAccountOut)
+def get_account(
+    account_id: UUID,
+    db: Session = Depends(get_db),
+    _: None = Depends(verify_api_key),
+) -> AwsAccount:
+    org = _default_org(db)
+    acc = db.query(AwsAccount).filter(AwsAccount.id == account_id, AwsAccount.org_id == org.id).first()
+    if not acc:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Account not found")
+    return acc
 
 
 @router.post("/{account_id}/verify", response_model=AwsAccountOut)
@@ -92,6 +132,26 @@ def verify_account(
     else:
         acc.status = AwsAccountStatus.error.value
         acc.last_verify_error_code = code
+    db.commit()
+    db.refresh(acc)
+    return acc
+
+
+@router.patch("/{account_id}", response_model=AwsAccountOut)
+def patch_account(
+    account_id: UUID,
+    body: AwsAccountUpdate,
+    db: Session = Depends(get_db),
+    _: None = Depends(verify_api_key),
+) -> AwsAccount:
+    org = _default_org(db)
+    acc = db.query(AwsAccount).filter(AwsAccount.id == account_id, AwsAccount.org_id == org.id).first()
+    if not acc:
+        raise HTTPException(status.HTTP_404_NOT_FOUND, detail="Account not found")
+    if body.display_name is not None:
+        acc.display_name = body.display_name
+    if body.environment is not None:
+        acc.environment = body.environment
     db.commit()
     db.refresh(acc)
     return acc

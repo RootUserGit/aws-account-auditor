@@ -65,3 +65,11 @@ export async function DELETE(
   const { path } = await ctx.params;
   return forward(request, path, "DELETE");
 }
+
+export async function PATCH(
+  request: NextRequest,
+  ctx: { params: Promise<{ path: string[] }> }
+) {
+  const { path } = await ctx.params;
+  return forward(request, path, "PATCH");
+}

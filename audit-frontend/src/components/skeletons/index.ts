@@ -1,6 +1,6 @@
 export { DashboardPageSkeleton } from "./DashboardPageSkeleton";
 export {
-  DashboardAccountsTableSkeleton,
+  DashboardAccountsCardsSkeleton,
   DashboardScanHistoryTableSkeleton,
   DashboardTablesSkeleton,
 } from "./DashboardTablesSkeleton";

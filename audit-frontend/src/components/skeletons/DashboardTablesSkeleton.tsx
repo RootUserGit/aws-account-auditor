@@ -1,12 +1,29 @@
 import { SkeletonBar, SkeletonPanel } from "./SkeletonPrimitives";
 
-export function DashboardAccountsTableSkeleton() {
+export function DashboardAccountsCardsSkeleton() {
   return (
     <div className="w-full" aria-hidden>
-      <CompactTableSkeleton titleW="w-48" rows={3} cols={4} />
+      <SkeletonPanel className="space-y-4">
+        <div className="space-y-2">
+          <SkeletonBar className="h-5 w-48" />
+          <SkeletonBar className="h-3 w-full max-w-2xl opacity-70" />
+        </div>
+        <div className="flex flex-wrap gap-3">
+          <SkeletonBar className="h-9 w-full max-w-md" />
+          <SkeletonBar className="h-9 w-full max-w-xs" />
+        </div>
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+          {[0, 1, 2].map((i) => (
+            <SkeletonBar key={i} className="h-40 w-full rounded-md" />
+          ))}
+        </div>
+      </SkeletonPanel>
     </div>
   );
 }
+
+/** @deprecated Use DashboardAccountsCardsSkeleton */
+export const DashboardAccountsTableSkeleton = DashboardAccountsCardsSkeleton;
 
 export function DashboardScanHistoryTableSkeleton() {
   return (

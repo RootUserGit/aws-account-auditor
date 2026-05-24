@@ -62,9 +62,33 @@ See `policies/auditor-policy.json` and `policies/README.md`. Your platform role 
 - **SQL (Postgres container):** use the **postgres** service user `audit`, not `root`:
 
 ```bash
-docker compose exec postgres psql -U audit -d audit -c 'SELECT id, account_id, role_arn FROM aws_accounts;'
+docker compose exec postgres psql -U audit -d audit -c 'SELECT id, account_id, display_name, environment, role_arn FROM aws_accounts;'
 # then DELETE related rows or use the API delete above
 ```
+
+### AWS account metadata (display name + environment)
+
+Each onboarded account stores:
+
+- **`display_name`** — short label shown on the operations dashboard (set at registration in the UI or in **`POST /accounts`** JSON).
+- **`environment`** — free-form tag string (max 128 chars) used for dashboard filtering. It is **not** an AWS resource tag. Matching is **case-insensitive but exact on the normalized string** (for example **`prod`** matches **`PROD`**, but **`prod`** does **not** match **`production`**). The UI shows tags in lowercase. If omitted or blank, the API stores **`other`** (the onboarding form starts empty and submits **`other`** when left blank).
+
+**API**
+
+- **`POST /accounts`** body (`AwsAccountCreate`) includes **`display_name`** and **`environment`** in addition to **`account_id`**, **`role_arn`**, and **`external_id`** (minimum 8 characters).
+- **`GET /accounts`** returns those fields on each row.
+- **`GET /accounts/{uuid}`** returns a single account row (same shape as list items).
+- **`GET /accounts/meta/environment-tags`** returns **`{ "tags": ["…"] }`** — distinct environment values already in the database (deduped by lowercase) for onboarding suggestions and dashboard filters.
+- **`PATCH /accounts/{uuid}`** accepts a JSON body with any of **`display_name`**, **`environment`** (at least one field required) to update metadata without re-onboarding.
+
+**Operations UI**
+
+- **`/dashboard`** — summary plus account cards and filters; open an account to work with runs.
+- **`/dashboard/accounts/{uuid}`** — scan history, start audit, and run / findings detail for that account (deep links from finding pages return here with **`?run=`** when the run is known).
+
+**Database**
+
+On PostgreSQL, **`audit_core.database.init_db()`** (called from the API lifespan) applies additive **`ALTER TABLE aws_accounts ...`** statements for **`display_name`** and **`environment`**, then backfills existing rows (`display_name` defaults to the 12-digit **`account_id`**, **`environment`** to **`other`**). No separate migration CLI is required for local MVP volumes.
 
 ## Local development (full stack on the host)
 
@@ -126,7 +150,7 @@ uvicorn audit_api.main:app --reload --host 127.0.0.1 --port 8000
 
 The API runs **`init_db()`** on startup, so you do not need a separate migration step for the MVP schema on a **fresh** database volume.
 
-**Existing Postgres volumes:** when the schema gains columns (for example **`findings.cis_control`** for CIS score / AUD-002), apply the SQL under **`docs/sql/`** once (e.g. `aud002_add_findings_cis_control.sql`) or recreate the volume for local dev.
+**Existing Postgres volumes:** when the schema gains columns (for example **`findings.cis_control`** for CIS score / AUD-002), apply the SQL under **`docs/sql/`** once (e.g. `aud002_add_findings_cis_control.sql`) or recreate the volume for local dev. Lightweight additive columns for **`aws_accounts`** (such as **`display_name`** / **`environment`**) are applied automatically by **`init_db()`** in **`audit_core/database.py`** when you start the API against Postgres.
 
 ### Step 5 — Start the Next.js dev server
 
@@ -135,6 +159,8 @@ cd audit-frontend
 npm install    # first time only
 npm run dev
 ```
+
+`npm run dev` runs **`next dev --webpack`** (Webpack bundler) so local development is reliable on **Windows**, where Turbopack’s dev cache can hit **“Persisting failed / Access is denied (os error 5)”** (permissions, Defender, or synced folders). On macOS/Linux you can optionally use **`npm run dev:turbo`** for Turbopack if you prefer.
 
 Open **http://localhost:3000**.
 
@@ -209,7 +235,8 @@ uvicorn audit_llm.main:app --host 127.0.0.1 --port 8001
 
 - **`GET /api/backend/accounts` 401:** mismatch between `audit-frontend/.env.local` and API `AUDIT_API_KEY`.  
 - **Run stuck Queued:** worker not running, or **`REDIS_URL`** / **`DATABASE_URL`** differ between API and worker (or Redis not up).  
-- **`python -m audit_agents.worker` can’t connect to Redis:** start **`docker compose up postgres redis`** and ensure **`REDIS_URL`** matches published **`localhost:6379`**.
+- **`python -m audit_agents.worker` can’t connect to Redis:** start **`docker compose up postgres redis`** and ensure **`REDIS_URL`** matches published **`localhost:6379`**.  
+- **Windows / Next — `Persisting failed` / `Access is denied (os error 5)`:** Turbopack could not write its dev cache (AV, Controlled Folder Access, OneDrive, or folder permissions). Use **`npm run dev`** (Webpack — default in this repo). If you insist on Turbopack (`npm run dev:turbo`), add a Defender exclusion for the repo’s **`.next`** folder, avoid OneDrive-synced paths, or move the clone to a normal NTFS path like **`C:\dev\…`**.
 
 ### Hybrid: DB/Redis/worker in Docker, API + frontend on the host
 

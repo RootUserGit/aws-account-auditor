@@ -126,8 +126,8 @@ export default function FindingDetailPage() {
   const kmsRotRows = asRecordArray(evObj?.keys_without_rotation);
   const openDefSgRows = asRecordArray(evObj?.open_default_sgs);
 
-  const dashboardHref = runId
-    ? `/dashboard?run=${encodeURIComponent(runId)}`
+  const dashboardHref = run?.platformAccountId
+    ? `/dashboard/accounts/${encodeURIComponent(run.platformAccountId)}?run=${encodeURIComponent(runId)}`
     : "/dashboard";
   const selfHref = `/dashboard/runs/${encodeURIComponent(runId)}/findings/${encodeURIComponent(findingId)}`;
 
@@ -153,9 +153,10 @@ export default function FindingDetailPage() {
         <SpaceBetween size="l" direction="vertical">
           {run ? (
             <Box variant="p" color="text-body-secondary" fontSize="body-s">
-              Run <Box variant="awsui-inline-code">{runId}</Box> · Account{" "}
-              <Box variant="awsui-inline-code">{run.account_id}</Box> · Run
-              status <span className="capitalize">{run.status}</span>
+              Run <Box variant="awsui-inline-code">{runId}</Box> · Platform
+              account{" "}
+              <Box variant="awsui-inline-code">{run.platformAccountId}</Box> ·
+              Run status <span className="capitalize">{run.status}</span>
             </Box>
           ) : null}
 
