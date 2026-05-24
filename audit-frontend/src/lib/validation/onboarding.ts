@@ -17,12 +17,41 @@ export const auditorRoleArnSchema = z
 export const externalIdSchema = z
   .string()
   .trim()
-  .min(1, "External ID is required for cross-account trust.");
+  .min(8, "External ID must be at least 8 characters (API requirement).");
+
+function hasControlCharacter(s: string): boolean {
+  for (let i = 0; i < s.length; i += 1) {
+    const c = s.codePointAt(i);
+    if (c !== undefined && c < 32) return true;
+  }
+  return false;
+}
+
+/** Free-form tag (prod, staging, UAT, …). Matched case-insensitively as a whole tag (prod ≠ production). */
+export const environmentTagSchema = z
+  .string()
+  .trim()
+  .min(1, "Environment tag is required.")
+  .max(128, "Environment tag must be at most 128 characters.")
+  .refine((s) => !hasControlCharacter(s), "Environment tag must not contain control characters.");
+
+export const displayNameSchema = z
+  .string()
+  .trim()
+  .min(1, "Account display name is required.")
+  .max(255, "Account display name must be at most 255 characters.");
 
 export const registerAccountFormSchema = z.object({
   account_id: awsAccountIdSchema,
   role_arn: auditorRoleArnSchema,
   external_id: externalIdSchema,
+  display_name: displayNameSchema,
+  /** Blank → stored as `other` on the server (same as leaving the tag unset). */
+  environment: z.preprocess((val) => {
+    if (typeof val !== "string") return val;
+    const t = val.trim();
+    return t === "" ? "other" : t;
+  }, environmentTagSchema),
 });
 
 export type RegisterAccountFormInput = z.infer<

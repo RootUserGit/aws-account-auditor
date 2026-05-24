@@ -1,6 +1,10 @@
 export type Account = {
   id: string;
   account_id: string;
+  /** Friendly label from onboarding (defaults to account_id for legacy rows). */
+  display_name: string;
+  /** Free-form environment tag (e.g. prod, staging); blank onboarded rows use `other`. */
+  environment: string;
   role_arn: string;
   status: string;
   last_verify_error_code?: string | null;
@@ -26,8 +30,23 @@ export type FindingRow = {
   pillar: string;
   severity: string;
   status: string;
+  cis_control?: string | null;
   remediation_hint?: string | null;
   evidence_json?: Record<string, unknown> | unknown[] | null;
+};
+
+/** CIS AWS Foundations Benchmark v1.5 aggregate from run summary_json. */
+export type CisAwsFoundationsV15Summary = {
+  framework?: string;
+  version?: string;
+  score_percent?: number | null;
+  mapped_checks_total?: number;
+  mapped_checks_passed?: number;
+  mapped_checks_failed?: number;
+  mapped_checks_unknown?: number;
+  failing_control_count?: number;
+  failing_control_ids?: string[];
+  band?: "red" | "amber" | "green" | null;
 };
 
 export type RunProgress = {
@@ -45,6 +64,7 @@ export type RunSummary = {
   groups?: Record<string, Record<string, number>>;
   failed_groups?: Record<string, Record<string, number>>;
   progress?: RunProgress;
+  cis_aws_foundations_v15?: CisAwsFoundationsV15Summary | null;
 };
 
 export type RunDetailState = {

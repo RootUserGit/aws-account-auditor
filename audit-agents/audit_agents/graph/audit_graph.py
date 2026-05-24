@@ -12,6 +12,7 @@ from botocore.exceptions import ClientError
 from langgraph.graph import END, START, StateGraph
 
 from audit_data_collection.cost import collect_cost, merge_cost_bundle
+from audit_data_collection.cspm_signals import build_cspm_signals
 from audit_data_collection.normalize import merge_evidence
 from audit_data_collection.security import collect_security, merge_security_bundle
 from audit_data_collection.session import default_boto_config, session_from_credentials
@@ -19,6 +20,7 @@ from audit_data_collection.session import default_boto_config, session_from_cred
 from audit_agents.graph.state import AuditState
 from audit_agents.reporting import render_html_report, write_report
 from audit_agents.rule_pack_path import resolve_rule_pack_path
+from audit_agents.cis_controls_v15 import aggregate_cis_compliance
 from audit_agents.rules_engine import aggregate_counts, evaluate_all
 from audit_agents.run_progress import report_progress
 
@@ -109,6 +111,7 @@ def node_merge(state: AuditState) -> dict[str, Any]:
         return {}
     report_progress({"phase": "merge", "message": "Merging evidence…"})
     merged = merge_evidence(state.get("security_bundle") or {}, state.get("cost_bundle") or {})
+    merged["cspm_signals"] = build_cspm_signals(merged, collector_errors=merged.get("_errors") or [])
     return {"merged_evidence": merged}
 
 
@@ -129,6 +132,7 @@ def node_evaluate(state: AuditState) -> dict[str, Any]:
 
     findings = evaluate_all(state["merged_evidence"], pack_dir, on_rule_progress=on_rule_progress)
     summary = aggregate_counts(findings)
+    summary["cis_aws_foundations_v15"] = aggregate_cis_compliance(findings)
     return {"findings": findings, "summary": summary}
 
 

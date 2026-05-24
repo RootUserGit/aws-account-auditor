@@ -1,5 +1,6 @@
 import { ConsoleRouteLoading } from "@/components/console/ConsoleRouteLoading";
 
-export default function DashboardLoading() {
+/** Global route transition (no skeleton placeholders). */
+export default function RootLoading() {
   return <ConsoleRouteLoading title="Loading…" />;
 }

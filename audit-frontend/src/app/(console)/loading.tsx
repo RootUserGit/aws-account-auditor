@@ -1,5 +1,5 @@
-import { WelcomePageSkeleton } from "@/components/skeletons";
+import { ConsoleRouteLoading } from "@/components/console/ConsoleRouteLoading";
 
 export default function ConsoleHomeLoading() {
-  return <WelcomePageSkeleton />;
+  return <ConsoleRouteLoading title="Loading…" />;
 }

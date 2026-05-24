@@ -1,5 +1,5 @@
-import { FindingDetailPageSkeleton } from "@/components/skeletons";
+import { ConsoleRouteLoading } from "@/components/console/ConsoleRouteLoading";
 
 export default function FindingDetailLoading() {
-  return <FindingDetailPageSkeleton />;
+  return <ConsoleRouteLoading title="Loading finding…" />;
 }

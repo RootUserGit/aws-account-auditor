@@ -50,6 +50,10 @@ class AwsAccount(Base):
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4)
     org_id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), ForeignKey("organizations.id"), nullable=False)
     account_id: Mapped[str] = mapped_column(String(12), nullable=False)
+    #: Human-friendly label in the UI (e.g. "Prod payments").
+    display_name: Mapped[str] = mapped_column(String(255), nullable=False, default="")
+    #: Free-form environment tag for filtering (e.g. prod, staging, UAT — not AWS data).
+    environment: Mapped[str] = mapped_column(String(128), nullable=False, default="other")
     role_arn: Mapped[str] = mapped_column(String(512), nullable=False)
     external_id: Mapped[str] = mapped_column(String(256), nullable=False)
     status: Mapped[str] = mapped_column(String(32), default=AwsAccountStatus.pending.value)
@@ -97,6 +101,8 @@ class Finding(Base):
     severity: Mapped[str] = mapped_column(String(32), nullable=False)
     status: Mapped[str] = mapped_column(String(32), nullable=False)
     war_theme: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    #: CIS AWS Foundations Benchmark v1.5 control id when mapped (e.g. "5.2", "2.1.1").
+    cis_control: Mapped[str | None] = mapped_column(String(32), nullable=True)
     resource_id: Mapped[str | None] = mapped_column(String(1024), nullable=True)
     evidence_json: Mapped[dict | None] = mapped_column(JSON, nullable=True)
     remediation_hint: Mapped[str | None] = mapped_column(Text, nullable=True)

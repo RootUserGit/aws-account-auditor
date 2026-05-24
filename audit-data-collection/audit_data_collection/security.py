@@ -9,6 +9,7 @@ from typing import Any
 import boto3
 from botocore.exceptions import ClientError
 
+from audit_data_collection.cspm_signals import _policy_doc_has_star_action
 from audit_data_collection.session import aws_session_client
 from audit_data_collection.types import CollectorResult
 
@@ -315,6 +316,61 @@ def collect_security(session: boto3.Session, account_id: str) -> CollectorResult
             )
         except ClientError:
             out.bundle["iam_cross_account_trust_without_external_id"] = None
+
+        # IAM user inline policies + wildcard sampling (Trend / AUD-001)
+        iam_users_inline_policies: list[dict[str, Any]] = []
+        iam_inline_policy_wildcard_hits: list[dict[str, Any]] = []
+        iam_attached_policy_wildcard_hits: list[dict[str, Any]] = []
+        try:
+            for row in users[:28]:
+                uname = row["user_name"]
+                try:
+                    inames = iam.list_user_policies(UserName=uname).get("PolicyNames", [])
+                    if inames:
+                        iam_users_inline_policies.append({"user_name": uname, "inline_policy_names": inames[:10]})
+                    for pname in inames[:3]:
+                        doc = iam.get_user_policy(UserName=uname, PolicyName=pname)["PolicyDocument"]
+                        if isinstance(doc, str):
+                            doc = json.loads(doc)
+                        if _policy_doc_has_star_action(doc):
+                            iam_inline_policy_wildcard_hits.append({"user_name": uname, "policy_name": pname})
+                except ClientError:
+                    continue
+            for row in users[:12]:
+                uname = row["user_name"]
+                try:
+                    attached = iam.list_attached_user_policies(UserName=uname).get("AttachedPolicies", [])
+                    for pol in attached[:4]:
+                        par = pol.get("PolicyArn") or ""
+                        if "arn:aws:iam::aws:policy/" in par or ":policy/" not in par:
+                            continue
+                        try:
+                            pol_meta = iam.get_policy(PolicyArn=par)["Policy"]
+                            vers = pol_meta.get("DefaultVersionId")
+                            if not vers:
+                                continue
+                            doc = iam.get_policy_version(PolicyArn=par, VersionId=vers)["PolicyVersion"]["Document"]
+                            if isinstance(doc, str):
+                                doc = json.loads(doc)
+                            if _policy_doc_has_star_action(doc):
+                                iam_attached_policy_wildcard_hits.append(
+                                    {
+                                        "user_name": uname,
+                                        "policy_arn": par,
+                                        "policy_name": pol.get("PolicyName"),
+                                    }
+                                )
+                        except ClientError:
+                            continue
+                except ClientError:
+                    continue
+            out.bundle["iam_users_inline_policies"] = iam_users_inline_policies[:40]
+            out.bundle["iam_inline_policy_wildcard_hits"] = iam_inline_policy_wildcard_hits[:30]
+            out.bundle["iam_attached_policy_wildcard_hits"] = iam_attached_policy_wildcard_hits[:25]
+        except Exception:
+            out.bundle["iam_users_inline_policies"] = None
+            out.bundle["iam_inline_policy_wildcard_hits"] = None
+            out.bundle["iam_attached_policy_wildcard_hits"] = None
     except ClientError as e:
         out.merge_errors("iam.users_mfa", e)
 
@@ -381,6 +437,19 @@ def collect_security(session: boto3.Session, account_id: str) -> CollectorResult
             except ClientError:
                 row["lifecycle_configured"] = False
             try:
+                logcfg = s3.get_bucket_logging(Bucket=name).get("LoggingEnabled") or {}
+                row["server_access_logging_enabled"] = bool(logcfg.get("TargetBucket"))
+            except ClientError as ce:
+                row["server_access_logging_enabled"] = None
+                row["logging_error"] = ce.response.get("Error", {}).get("Code")
+            try:
+                pst = s3.get_bucket_policy_status(Bucket=name)
+                ps = pst.get("PolicyStatus") or {}
+                row["bucket_policy_is_public"] = ps.get("IsPublic")
+            except ClientError as ce:
+                row["bucket_policy_is_public"] = None
+                row["policy_status_error"] = ce.response.get("Error", {}).get("Code")
+            try:
                 pol_doc = json.loads(s3.get_bucket_policy(Bucket=name)["Policy"])
                 row["bucket_policy_present"] = True
                 pol_txt = json.dumps(pol_doc).lower()
@@ -391,9 +460,12 @@ def collect_security(session: boto3.Session, account_id: str) -> CollectorResult
                 row["bucket_policy_present"] = False
                 row["bucket_policy_denies_insecure_transport"] = None
             bucket_pab.append(row)
+        pub_names = [r.get("name") for r in bucket_pab if r.get("bucket_policy_is_public") is True][:45]
         out.bundle["s3_buckets"] = bucket_pab
+        out.bundle["s3_bucket_public_acl_findings"] = pub_names
     except ClientError as e:
         out.merge_errors("s3.list_buckets", e)
+        out.bundle["s3_bucket_public_acl_findings"] = None
 
     # Account-level public access block (S3 Control)
     try:
@@ -939,6 +1011,10 @@ def collect_security(session: boto3.Session, account_id: str) -> CollectorResult
                             "engine": db.get("Engine"),
                             "publicly_accessible": bool(db.get("PubliclyAccessible")),
                             "storage_encrypted": bool(db.get("StorageEncrypted")),
+                            "backup_retention_period": int(db.get("BackupRetentionPeriod") or 0),
+                            "auto_minor_version_upgrade": db.get("AutoMinorVersionUpgrade"),
+                            "multi_az": db.get("MultiAZ"),
+                            "deletion_protection": db.get("DeletionProtection"),
                         }
                     )
             except ClientError:
@@ -1220,6 +1296,7 @@ def collect_security(session: boto3.Session, account_id: str) -> CollectorResult
                     "is_multi_region": t.get("IsMultiRegionTrail"),
                     "is_organization_trail": t.get("IsOrganizationTrail"),
                     "log_file_validation_enabled": t.get("LogFileValidationEnabled"),
+                    "cloud_watch_logs_log_group_arn": t.get("CloudWatchLogsLogGroupArn"),
                     "is_logging": None,
                 }
             )
@@ -1234,6 +1311,119 @@ def collect_security(session: boto3.Session, account_id: str) -> CollectorResult
     except ClientError as e:
         out.bundle["cloudtrail_trails"] = []
         out.merge_errors("cloudtrail", e)
+
+    # --- AUD-001: Trend-style supplemental inventory (sampled Regions, read-only) ---
+    scan_regions: list[str] = []
+    try:
+        ec2r_scan = aws_session_client(session, "ec2", region_name=session.region_name or "us-east-1")
+        scan_regions = [r["RegionName"] for r in ec2r_scan.describe_regions()["Regions"]][:12]
+    except ClientError:
+        scan_regions = [session.region_name or "us-east-1"]
+
+    ebs_unenc: list[dict[str, Any]] = []
+    gp2_in_use = 0
+    total_flow = 0
+    default_vpc_n = 0
+    nat_total = 0
+    alb_total = 0
+    for reg in scan_regions:
+        try:
+            ec2 = aws_session_client(session, "ec2", region_name=reg)
+            vols = ec2.describe_volumes(Filters=[{"Name": "status", "Values": ["in-use"]}], MaxResults=80).get(
+                "Volumes", []
+            )
+            for vol in vols:
+                if vol.get("Encrypted") is False and len(ebs_unenc) < 50:
+                    ebs_unenc.append(
+                        {
+                            "region": reg,
+                            "volume_id": vol.get("VolumeId"),
+                            "size_gb": vol.get("Size"),
+                            "volume_type": vol.get("VolumeType"),
+                        }
+                    )
+                if (vol.get("VolumeType") or "").lower() == "gp2":
+                    gp2_in_use += 1
+            fl = ec2.describe_flow_logs(MaxResults=1000).get("FlowLogs", [])
+            total_flow += len(fl)
+            default_vpc_n += len(
+                ec2.describe_vpcs(Filters=[{"Name": "isDefault", "Values": ["true"]}]).get("Vpcs", [])
+            )
+            nat_total += len(ec2.describe_nat_gateways(MaxResults=500).get("NatGateways", []))
+        except ClientError:
+            continue
+        try:
+            elbv2 = aws_session_client(session, "elbv2", region_name=reg)
+            alb_total += len(elbv2.describe_load_balancers().get("LoadBalancers", []))
+        except ClientError:
+            continue
+
+    out.bundle["ebs_unencrypted_in_use_volumes"] = ebs_unenc[:50]
+    out.bundle["vpc_flow_logs_account_summary"] = {"regions_sampled": scan_regions, "total_flow_logs": total_flow}
+    out.bundle["ec2_default_vpc_count"] = default_vpc_n
+    out.bundle["ec2_nat_gateway_total_count"] = nat_total
+    out.bundle["ec2_alb_total_count"] = alb_total
+    out.bundle["ebs_gp2_in_use_volume_count"] = gp2_in_use
+
+    try:
+        cw_home = aws_session_client(session, "cloudwatch", region_name=session.region_name or "us-east-1")
+        out.bundle["cloudwatch_metric_alarm_count"] = len(
+            cw_home.describe_alarms(MaxRecords=100).get("MetricAlarms", [])
+        )
+    except ClientError:
+        out.bundle["cloudwatch_metric_alarm_count"] = None
+
+    ddb_pitr: list[str] = []
+    for reg in scan_regions[:8]:
+        try:
+            ddb = aws_session_client(session, "dynamodb", region_name=reg)
+            names = ddb.list_tables(Limit=25).get("TableNames", [])
+            for tbl in names:
+                try:
+                    pit = ddb.describe_continuous_backups(TableName=tbl).get("ContinuousBackupsDescription") or {}
+                    st = (pit.get("PointInTimeRecoveryDescription") or {}).get("PointInTimeRecoveryStatus")
+                    if st != "ENABLED":
+                        ddb_pitr.append(f"{reg}:{tbl}")
+                except ClientError:
+                    continue
+                if len(ddb_pitr) >= 40:
+                    break
+        except ClientError:
+            continue
+        if len(ddb_pitr) >= 40:
+            break
+    out.bundle["dynamodb_pitr_disabled_tables"] = ddb_pitr[:40]
+
+    ec_unenc: list[dict[str, Any]] = []
+    for reg in scan_regions[:8]:
+        try:
+            elc = aws_session_client(session, "elasticache", region_name=reg)
+            for cls in elc.describe_cache_clusters(ShowCacheNodeInfo=False).get("CacheClusters", [])[:22]:
+                if cls.get("AtRestEncryptionEnabled") is False:
+                    ec_unenc.append({"region": reg, "cache_cluster_id": cls.get("CacheClusterId")})
+        except ClientError:
+            continue
+    out.bundle["elasticache_unencrypted_clusters"] = ec_unenc[:30]
+
+    efs_bad: list[dict[str, Any]] = []
+    for reg in scan_regions[:8]:
+        try:
+            efs = aws_session_client(session, "efs", region_name=reg)
+            for fs in efs.describe_file_systems(MaxItems=25).get("FileSystems", []):
+                if fs.get("Encrypted") is False:
+                    efs_bad.append({"region": reg, "file_system_id": fs.get("FileSystemId")})
+        except ClientError:
+            continue
+    out.bundle["efs_unencrypted_file_systems"] = efs_bad[:25]
+
+    ami_age: list[dict[str, Any]] = []
+    for a in out.bundle.get("ec2_owned_ami_posture") or []:
+        age = _days_since_dt(a.get("creation_date"))
+        if age is not None and age > 180:
+            row = dict(a)
+            row["age_days"] = age
+            ami_age.append(row)
+    out.bundle["ec2_owned_ami_age_days_over_180"] = ami_age[:35]
 
     return out
 

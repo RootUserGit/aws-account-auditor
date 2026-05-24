@@ -10,6 +10,8 @@ export function useApi() {
     () => ({
       fetchRunsList: runsService.fetchRunsList,
       fetchAccounts: accountsService.listAccounts,
+      listEnvironmentTags: accountsService.listEnvironmentTags,
+      getAccount: accountsService.getAccount,
       fetchRun: runsService.fetchRun,
       fetchRunFinding: runsService.fetchRunFinding,
       fetchRunFindingsCapped: runsService.fetchRunFindingsCapped,

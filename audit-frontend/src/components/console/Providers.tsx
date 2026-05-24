@@ -1,11 +1,14 @@
 "use client";
 
 import { applyMode, Mode } from "@cloudscape-design/global-styles";
+import {
+  AUDIT_THEME_DEFAULT,
+  AUDIT_THEME_ENABLE_SYSTEM,
+  AUDIT_THEME_STORAGE_KEY,
+} from "@/lib/theme-config";
 import { ThemeProvider, useTheme } from "next-themes";
 import { useLayoutEffect } from "react";
 import { Toaster } from "sonner";
-
-const STORAGE_KEY = "audit-ui-theme";
 
 function CloudscapeModeSync() {
   const { resolvedTheme } = useTheme();
@@ -29,9 +32,10 @@ export function Providers({
   return (
     <ThemeProvider
       attribute="class"
-      defaultTheme="dark"
-      enableSystem
-      storageKey={STORAGE_KEY}
+      defaultTheme={AUDIT_THEME_DEFAULT}
+      enableSystem={AUDIT_THEME_ENABLE_SYSTEM}
+      storageKey={AUDIT_THEME_STORAGE_KEY}
+      disableTransitionOnChange
     >
       <CloudscapeModeSync />
       <Toaster richColors closeButton />

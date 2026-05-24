@@ -4,6 +4,7 @@ import Alert from "@cloudscape-design/components/alert";
 import Box from "@cloudscape-design/components/box";
 import BreadcrumbGroup from "@cloudscape-design/components/breadcrumb-group";
 import Button from "@cloudscape-design/components/button";
+import Container from "@cloudscape-design/components/container";
 import ContentLayout from "@cloudscape-design/components/content-layout";
 import FormField from "@cloudscape-design/components/form-field";
 import Header from "@cloudscape-design/components/header";
@@ -36,6 +37,8 @@ export default function OnboardingPage() {
   const [accountId, setAccountId] = useState("");
   const [roleArn, setRoleArn] = useState("");
   const [externalId, setExternalId] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [environment, setEnvironment] = useState("");
   const [message, setMessage] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   /** Platform row UUID for aws_accounts (e.g. ea501131-cc04-42aa-adb6-fcadc88df107) — not the 12-digit AWS account id */
@@ -44,6 +47,8 @@ export default function OnboardingPage() {
     account_id?: string;
     role_arn?: string;
     external_id?: string;
+    display_name?: string;
+    environment?: string;
   }>({});
 
   async function register() {
@@ -52,6 +57,8 @@ export default function OnboardingPage() {
       account_id: accountId,
       role_arn: roleArn,
       external_id: externalId,
+      display_name: displayName,
+      environment,
     });
     if (!parsed.success) {
       const fe = parsed.error.flatten().fieldErrors;
@@ -59,6 +66,8 @@ export default function OnboardingPage() {
         account_id: fe.account_id?.[0],
         role_arn: fe.role_arn?.[0],
         external_id: fe.external_id?.[0],
+        display_name: fe.display_name?.[0],
+        environment: fe.environment?.[0],
       });
       return;
     }
@@ -94,7 +103,7 @@ export default function OnboardingPage() {
       const id = typeof data.id === "string" ? data.id : "";
       setLinkedRowId(id);
       setMessage(
-        `Registered AWS account ${String(data.account_id ?? "")}. Saved row id (use for Verify): ${id}`,
+        `Registered "${String(data.display_name ?? "")}" (${String(data.account_id ?? "")}). Saved row id (use for Verify): ${id}`,
       );
       toast.success("Account registered");
     } catch {
@@ -196,74 +205,119 @@ export default function OnboardingPage() {
           onFollow={onBreadcrumbFollow}
         />
       }
-      maxContentWidth={800}
+      maxContentWidth={1200}
       header={<Header variant="h1">Onboard AWS account</Header>}
     >
-      <SpaceBetween size="l">
-        <Box variant="p" color="text-body-secondary" fontSize="body-s">
-          After <strong>Register</strong>, copy the <strong>row UUID</strong>{" "}
-          (eight-dash format). Verify calls{" "}
-          <Box variant="awsui-inline-code">
-            POST /accounts/{"{uuid}"}/verify
-          </Box>
-          . Random strings with <Box variant="awsui-inline-code">/</Box> or{" "}
-          <Box variant="awsui-inline-code">+</Box> are not valid UUIDs and will
-          404.
-        </Box>
-
-        <SpaceBetween size="m">
-          <FormField
-            label="Account ID (12 digits)"
-            errorText={fieldErrors.account_id}
-          >
-            <Input
-              value={accountId}
-              onChange={({ detail }) => {
-                setAccountId(detail.value);
-                setFieldErrors((e) => ({ ...e, account_id: undefined }));
-              }}
-              placeholder="123456789012"
-            />
-          </FormField>
-          <FormField label="Auditor role ARN" errorText={fieldErrors.role_arn}>
-            <Input
-              value={roleArn}
-              onChange={({ detail }) => {
-                setRoleArn(detail.value);
-                setFieldErrors((e) => ({ ...e, role_arn: undefined }));
-              }}
-              placeholder="arn:aws:iam::123456789012:role/YourAuditorRole"
-            />
-          </FormField>
-          <FormField label="External ID" errorText={fieldErrors.external_id}>
-            <Input
-              value={externalId}
-              onChange={({ detail }) => {
-                setExternalId(detail.value);
-                setFieldErrors((e) => ({ ...e, external_id: undefined }));
-              }}
-            />
-          </FormField>
-          <Button variant="primary" disabled={loading} onClick={register}>
-            Register
-          </Button>
-          <QuickVerify
-            key={linkedRowId ?? "no-row"}
-            initialId={linkedRowId ?? ""}
-            onVerify={verify}
-            onDelete={removeAccount}
-            disabled={loading}
-          />
-        </SpaceBetween>
-
-        {message ? (
-          <Alert type="info" header="Result">
-            <Box variant="pre" fontSize="body-s">
-              {message}
+      <div className="mx-auto w-full max-w-[40rem] px-0 sm:px-1">
+        <SpaceBetween size="l">
+          <Box variant="p" color="text-body-secondary" fontSize="body-s">
+            After <strong>Register</strong>, copy the <strong>row UUID</strong>{" "}
+            (eight-dash format). Verify calls{" "}
+            <Box variant="awsui-inline-code">
+              POST /accounts/{"{uuid}"}/verify
             </Box>
-          </Alert>
-        ) : null}
-      </SpaceBetween>
+            . Random strings with <Box variant="awsui-inline-code">/</Box> or{" "}
+            <Box variant="awsui-inline-code">+</Box> are not valid UUIDs and
+            will 404.
+          </Box>
+
+          <Container
+            header={
+              <Header variant="h2" description="Trust and external ID must match your IAM role configuration.">
+                Account details
+              </Header>
+            }
+          >
+            <SpaceBetween size="m">
+              <FormField
+                label="Account ID (12 digits)"
+                errorText={fieldErrors.account_id}
+              >
+                <Input
+                  value={accountId}
+                  onChange={({ detail }) => {
+                    setAccountId(detail.value);
+                    setFieldErrors((e) => ({ ...e, account_id: undefined }));
+                  }}
+                  placeholder="123456789012"
+                />
+              </FormField>
+              <FormField
+                label="Auditor role ARN"
+                errorText={fieldErrors.role_arn}
+              >
+                <Input
+                  value={roleArn}
+                  onChange={({ detail }) => {
+                    setRoleArn(detail.value);
+                    setFieldErrors((e) => ({ ...e, role_arn: undefined }));
+                  }}
+                  placeholder="arn:aws:iam::123456789012:role/YourAuditorRole"
+                />
+              </FormField>
+              <FormField
+                label="External ID"
+                errorText={fieldErrors.external_id}
+              >
+                <Input
+                  value={externalId}
+                  onChange={({ detail }) => {
+                    setExternalId(detail.value);
+                    setFieldErrors((e) => ({ ...e, external_id: undefined }));
+                  }}
+                />
+              </FormField>
+              <FormField
+                label="Account display name"
+                description="Shown on the operations dashboard (e.g. team or workload name)."
+                errorText={fieldErrors.display_name}
+              >
+                <Input
+                  value={displayName}
+                  onChange={({ detail }) => {
+                    setDisplayName(detail.value);
+                    setFieldErrors((e) => ({ ...e, display_name: undefined }));
+                  }}
+                  placeholder="e.g. Prod payments / Security sandbox"
+                />
+              </FormField>
+              <FormField
+                label="Environment tag"
+                description="Optional. Dashboard filter uses exact tag match (case-insensitive). Leave blank for the default tag (shown as “-” on cards)."
+                errorText={fieldErrors.environment}
+                stretch
+              >
+                <Input
+                  value={environment}
+                  onChange={({ detail }) => {
+                    setEnvironment(detail.value);
+                    setFieldErrors((e) => ({ ...e, environment: undefined }));
+                  }}
+                  placeholder="e.g. prod, staging, UAT — or leave blank for default (-)"
+                />
+              </FormField>
+              <Button variant="primary" disabled={loading} onClick={register}>
+                Register
+              </Button>
+              <QuickVerify
+                key={linkedRowId ?? "no-row"}
+                initialId={linkedRowId ?? ""}
+                onVerify={verify}
+                onDelete={removeAccount}
+                disabled={loading}
+              />
+            </SpaceBetween>
+          </Container>
+
+          {message ? (
+            <Alert type="info" header="Result">
+              <Box variant="pre" fontSize="body-s">
+                {message}
+              </Box>
+            </Alert>
+          ) : null}
+        </SpaceBetween>
+      </div>
     </ContentLayout>
   );
 }

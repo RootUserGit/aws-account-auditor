@@ -14,7 +14,8 @@ function scalarStringFromUnknown(value: unknown): string {
 
 export type FindingDetailRunMeta = {
   status: string;
-  account_id: string;
+  /** Registered platform account UUID (FK on the run row). */
+  platformAccountId: string;
 };
 
 export type FindingDetailFinding = {
@@ -71,7 +72,7 @@ export function useFindingDetail(runId: string, findingId: string) {
           const r = rData as Record<string, unknown>;
           setRun({
             status: scalarStringFromUnknown(r.status),
-            account_id: scalarStringFromUnknown(r.account_id),
+            platformAccountId: scalarStringFromUnknown(r.account_id),
           });
           if (!isHttpOk(fRes.status) || fData == null) {
             const detail =

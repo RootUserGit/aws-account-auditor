@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import csv
+import inspect
 import io
 import logging
 from datetime import datetime, timezone
@@ -8,6 +9,8 @@ from pathlib import Path
 from typing import Any, Callable, Dict, Optional, Tuple
 
 import yaml
+
+from audit_agents.cis_controls_v15 import resolve_cis_control
 
 logger = logging.getLogger(__name__)
 
@@ -1525,10 +1528,54 @@ def cost_zero_spend_signal(ev: dict[str, Any]) -> RuleEvalResult:
     return ("passed", {"total": total}, None, "")
 
 
+def _call_evaluator(
+    fn: Callable[..., RuleEvalResult],
+    evidence: dict[str, Any],
+    rule: dict[str, Any],
+) -> RuleEvalResult:
+    """Invoke legacy 1-arg evaluators or newer 2-arg (evidence, rule) evaluators."""
+    try:
+        sig = inspect.signature(fn)
+        if len(sig.parameters) >= 2:
+            return fn(evidence, rule)  # type: ignore[misc]
+    except (TypeError, ValueError):
+        pass
+    return fn(evidence)  # type: ignore[misc]
+
+
+@register("cspm_signal")
+def cspm_signal(ev: dict[str, Any], rule: dict[str, Any]) -> RuleEvalResult:
+    """Evaluate a precomputed CSPM signal from `merged_evidence['cspm_signals']` (AUD-001)."""
+    sid = (rule or {}).get("cspm_signal")
+    if not sid:
+        return ("unknown", {}, None, "Rule YAML must set `cspm_signal: SIGNAL_KEY`.")
+    sigs = ev.get("cspm_signals")
+    if sigs is None:
+        return ("unknown", {"cspm_signal": sid}, None, "CSPM signals missing — run collector merge with an updated worker.")
+    block = sigs.get(sid)
+    if block is None:
+        return ("unknown", {"cspm_signal": sid}, None, "Signal key not produced by collector.")
+    st = block.get("status") or "unknown"
+    rem = (block.get("remediation_hint") or block.get("remediation") or "").strip()
+    evid = block.get("evidence") if isinstance(block.get("evidence"), dict) else {}
+    rid = block.get("resource_id")
+    if st == "passed":
+        return ("passed", evid, rid, "")
+    if st == "failed":
+        return ("failed", evid, rid, rem or "Review evidence and align with AWS / Trend Micro CSPM guidance.")
+    return ("unknown", evid, rid, rem or "")
+
+
 def load_rule_definitions(pack_dir: Path) -> list[dict[str, Any]]:
     rules: list[dict[str, Any]] = []
     for path in sorted(pack_dir.rglob("*.yaml")):
-        rules.append(yaml.safe_load(path.read_text(encoding="utf-8")))
+        raw = yaml.safe_load(path.read_text(encoding="utf-8"))
+        if isinstance(raw, list):
+            for item in raw:
+                if isinstance(item, dict):
+                    rules.append(item)
+        elif isinstance(raw, dict):
+            rules.append(raw)
     return rules
 
 
@@ -1562,6 +1609,7 @@ def evaluate_all(
                     "pillar": rule["pillar"],
                     "severity": rule["severity"],
                     "war_theme": rule.get("war_theme"),
+                    "cis_control": resolve_cis_control(rule),
                     "status": "unknown",
                     "resource_id": None,
                     "evidence_json": {"error": f"unknown_evaluator:{ev_name}"},
@@ -1570,13 +1618,14 @@ def evaluate_all(
             )
             bump(i)
             continue
-        status, ev_subset, resource_id, hint = fn(evidence)
+        status, ev_subset, resource_id, hint = _call_evaluator(fn, evidence, rule)
         out.append(
             {
                 "check_id": rule["id"],
                 "pillar": rule["pillar"],
                 "severity": rule["severity"],
                 "war_theme": rule.get("war_theme"),
+                "cis_control": resolve_cis_control(rule),
                 "status": status,
                 "resource_id": resource_id,
                 "evidence_json": ev_subset,

@@ -2,7 +2,6 @@
 
 import Box from "@cloudscape-design/components/box";
 import Button from "@cloudscape-design/components/button";
-import ColumnLayout from "@cloudscape-design/components/column-layout";
 import Container from "@cloudscape-design/components/container";
 import ContentLayout from "@cloudscape-design/components/content-layout";
 import Header from "@cloudscape-design/components/header";
@@ -44,16 +43,16 @@ export default function Home() {
           review grouped findings with production-grade remediation playbooks —
           deterministic rules stay the source of truth.
         </Box>
-        <SpaceBetween direction="horizontal" size="xs">
+        <div className="flex w-full min-w-0 flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
           <Button variant="primary" onClick={() => router.push("/onboarding")}>
             Onboard account
           </Button>
           <Button onClick={() => router.push("/dashboard")}>
             Open dashboard
           </Button>
-        </SpaceBetween>
+        </div>
 
-        <ColumnLayout columns={3} variant="text-grid" minColumnWidth={200}>
+        <div className="grid w-full min-w-0 grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {CARDS.map((card) => (
             <Container
               key={card.title}
@@ -75,7 +74,7 @@ export default function Home() {
               </SpaceBetween>
             </Container>
           ))}
-        </ColumnLayout>
+        </div>
 
         <Container header={<Header variant="h2">Customer IAM</Header>}>
           <Box variant="p" color="text-body-secondary" fontSize="body-s">

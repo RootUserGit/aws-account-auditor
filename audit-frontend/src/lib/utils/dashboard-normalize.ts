@@ -1,4 +1,5 @@
 import type {
+  Account,
   FindingRow,
   RunDetailState,
   RunSummary,
@@ -10,9 +11,11 @@ export function normalizeScanHistoryRow(raw: unknown): ScanHistoryRow | null {
   const o = raw as Record<string, unknown>;
   const id = typeof o.id === "string" ? o.id : "";
   if (!id) return null;
-  const pid = o.platform_account_id;
-  const platform_account_id =
-    typeof pid === "string" ? pid : typeof pid === "number" ? String(pid) : "";
+  const pid = o.platform_account_id ?? o.platformAccountId;
+  let platform_account_id = "";
+  if (typeof pid === "string") platform_account_id = pid.trim();
+  else if (typeof pid === "number" && Number.isFinite(pid))
+    platform_account_id = String(pid);
   return {
     id,
     platform_account_id,
@@ -58,6 +61,33 @@ export function normalizeRunDetail(
     error_code:
       raw.error_code === null || typeof raw.error_code === "string"
         ? raw.error_code
+        : null,
+  };
+}
+
+export function normalizeAccount(raw: unknown): Account | null {
+  if (!raw || typeof raw !== "object") return null;
+  const o = raw as Record<string, unknown>;
+  const id = typeof o.id === "string" ? o.id : "";
+  const account_id = typeof o.account_id === "string" ? o.account_id : "";
+  if (!id || !account_id) return null;
+  const rawEnv =
+    typeof o.environment === "string" ? o.environment.trim() : "";
+  const environment = rawEnv.length > 0 ? rawEnv : "other";
+  const rawName =
+    typeof o.display_name === "string" ? o.display_name.trim() : "";
+  const display_name = rawName.length > 0 ? rawName : account_id;
+  return {
+    id,
+    account_id,
+    display_name,
+    environment,
+    role_arn: typeof o.role_arn === "string" ? o.role_arn : "",
+    status: typeof o.status === "string" ? o.status : "pending",
+    last_verify_error_code:
+      o.last_verify_error_code === null ||
+      typeof o.last_verify_error_code === "string"
+        ? o.last_verify_error_code
         : null,
   };
 }

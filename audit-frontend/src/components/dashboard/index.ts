@@ -1,5 +1,7 @@
-export { DashboardAccountsTable } from "./DashboardAccountsTable";
-export type { DashboardAccountsTableProps } from "./DashboardAccountsTable";
+export { DashboardAccountsCards } from "./DashboardAccountsCards";
+export type { DashboardAccountsCardsProps } from "./DashboardAccountsCards";
+export { DashboardAccountsSummary } from "./DashboardAccountsSummary";
+export type { DashboardAccountsSummaryProps } from "./DashboardAccountsSummary";
 export { DashboardScanHistoryTable } from "./DashboardScanHistoryTable";
 export type { DashboardScanHistoryTableProps } from "./DashboardScanHistoryTable";
 export { DashboardErrorBanner } from "./DashboardErrorBanner";
@@ -19,6 +21,8 @@ export type {
 } from "./DashboardRunOutcomeBanners";
 export { DashboardFindingsFilterPanel } from "./DashboardFindingsFilterPanel";
 export type { DashboardFindingsFilterPanelProps } from "./DashboardFindingsFilterPanel";
+export { DashboardCisComplianceCard } from "./DashboardCisComplianceCard";
+export type { DashboardCisComplianceCardProps } from "./DashboardCisComplianceCard";
 export { DashboardRunSummaryCards } from "./DashboardRunSummaryCards";
 export type { DashboardRunSummaryCardsProps } from "./DashboardRunSummaryCards";
 export { DashboardSeverityStatusCharts } from "./DashboardSeverityStatusCharts";

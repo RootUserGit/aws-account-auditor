@@ -24,3 +24,5 @@ Example trust policy skeleton (replace placeholders):
 ```
 
 Trusted Advisor and Security Hub APIs may return access denied in accounts without the required subscription or service enablement — the collectors record partial success.
+
+AUD-001 expansion (S3 logging / policy status, IAM policy analysis, RDS extended posture, CloudTrail→CloudWatch Logs, ELBv2, Flow Logs, DynamoDB PITR, ElastiCache, EFS, etc.) requires the additional **read-only** actions listed in `auditor-policy.json` (see the `AuditReadOnlyDiscovery` statement). Update customer roles when you ship this pack.

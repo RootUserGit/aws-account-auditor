@@ -48,6 +48,45 @@ def init_db() -> None:
             )
             conn.execute(
                 text(
+                    "ALTER TABLE aws_accounts ADD COLUMN IF NOT EXISTS "
+                    "display_name VARCHAR(255)"
+                )
+            )
+            conn.execute(
+                text(
+                    "ALTER TABLE aws_accounts ADD COLUMN IF NOT EXISTS "
+                    "environment VARCHAR(128)"
+                )
+            )
+            conn.execute(
+                text(
+                    "UPDATE aws_accounts SET display_name = account_id "
+                    "WHERE display_name IS NULL OR BTRIM(display_name) = ''"
+                )
+            )
+            conn.execute(
+                text(
+                    "UPDATE aws_accounts SET environment = 'other' "
+                    "WHERE environment IS NULL OR BTRIM(environment) = ''"
+                )
+            )
+            conn.execute(
+                text(
+                    "ALTER TABLE aws_accounts ALTER COLUMN display_name SET NOT NULL"
+                )
+            )
+            conn.execute(
+                text(
+                    "ALTER TABLE aws_accounts ALTER COLUMN environment TYPE VARCHAR(128)"
+                )
+            )
+            conn.execute(
+                text(
+                    "ALTER TABLE aws_accounts ALTER COLUMN environment SET NOT NULL"
+                )
+            )
+            conn.execute(
+                text(
                     "ALTER TABLE audit_runs ADD COLUMN IF NOT EXISTS "
                     "rq_job_id VARCHAR(128)"
                 )

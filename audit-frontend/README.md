@@ -14,6 +14,8 @@ pnpm dev
 bun dev
 ```
 
+`npm run dev` uses **Webpack** (`next dev --webpack`) by default so development works on **Windows** without Turbopack cache permission errors. Use **`npm run dev:turbo`** if you want Turbopack and your environment allows it.
+
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
